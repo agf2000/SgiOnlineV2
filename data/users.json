@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Giovanni",
+    "sgiid": "14992",
+    "password": "senha",
+    "admin": true,
+    "email": "agf_2000@hotmail.com",
+	"department": 2,
+	"deptBlocked": "",
+	"deptBlockedDiscount": "teste",
+	"displayName": "Giovanni",
+	"employee": "Giovanni",
+	"roles": [ "VENDAS" ],
+	"salesman": false,
+	"supervisor": false,
+	"username": "94"
+  },
+  {
+    "name": "pax",
+    "id": "1d7975e3-d2ca-4836-b9b0-967ab1ccb61f",
+    "password": "treats",
+    "admin": false
+  },
+  {
+    "name": "john",
+    "id": "9841a17f-7a55-4bf8-bb90-a828cb8d14d1",
+    "password": "doe",
+    "admin": false
+  }
+]

@@ -1,0 +1,107 @@
+<div class="x_panel">
+    <div class="x_title">
+        <div class="selectSearchFor col-xs-6 col-sm-6 col-md-2 col-lg-2">
+        <label>Filtrar por:</label>
+        <div class="form-group">
+            <select class="form-control input-sm"></select>
+        </div>
+    </div>
+    <div class="selectConditions col-xs-6 col-sm-6 col-md-2 col-lg-2">
+        <label>Condição:</label>
+        <div class="form-group">
+            <select class="form-control input-sm">
+                <option selected value="=">
+                    Igual
+                </option>
+
+                <option value="between">
+                    Entre
+                </option>
+
+                <option value="&gt;">
+                    Maior do que
+                </option>
+
+                <option value="&lt;">
+                    Menor do que
+                </option>
+
+                <option value="like">
+                    Contém
+                </option>
+
+                <option value="&lt;&gt;">
+                    Diferente
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="tbSearchFor col-xs-6 col-sm-6 col-md-2 col-lg-2">
+        <label>Parãmetro 1:</label>
+        <div class="form-group">
+            <input class="form-control input-sm" type="text">
+        </div>
+    </div>
+    <div class="condition col-xs-12 col-sm-1 col-lg-1 text-center hidden">
+        <div class="form-group">
+            <input checked data-off-text="ou" data-on-text="e" data-size="small" type="checkbox">
+        </div>
+    </div>
+    <div class="tbSearchFor2 col-xs-6 col-sm-6 col-md-2 col-lg-2">
+        <label>Parãmetro 2:</label>
+        <div class="form-group">
+            <input class="form-control input-sm" type="text">
+        </div>
+    </div>
+    <div class="filterButtons col-xs-6 col-sm-6 col-md-1 col-lg-1 visible-lg">
+        <label>&nbsp;</label>
+        <div class="form-group">
+        </div>
+    </div>
+    <div class="col-xs-6 col-md-2 col-lg-2">
+        <label>&nbsp;</label>
+        <div class="form-group">
+            <button class="btn btn-default btn-flat btn-sm hidden" id="btnRemoveFilter" data-toggle="tooltip" data-placement="top" title="Remover Filtro">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+            <button class="btn btn-success btn-flat btn-sm hidden-md hidden-sm hidden-xs" id="btnAddFilter" data-toggle="tooltip" data-placement="bottom" title="Adicionar Filtro">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+            <button class="btn btn-primary btn-flat btn-sm" id="btnDoSearch" data-toggle="tooltip" data-placement="top" title="Aplicar Filtro">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+            <button class="btn btn-danger btn-flat btn-sm" id="btnRemoveFilters" data-toggle="tooltip" data-placement="right" title="Resetar Busca">
+                                        <i class="fa fa-times-circle"></i>
+                                    </button>
+        </div>
+    </div>
+        <ul class="nav navbar-right panel_toolbox">
+            <li>
+                <button class="btn-link" onclick="javascript: getPrevDay(); return false;">
+                    <i class="fa fa-chevron-left fa-2x" data-toggle="tooltip" data-placement="left" title="Aplicar filtro por data de cadastro (dia anterior)"></i>
+                </button>
+                <button class="btn-link" onclick="javascript: getNextDay(); return false;">
+                    <i class="fa fa-chevron-right fa-2x" data-toggle="tooltip" data-placement="left" title="Aplicar filtro por data de cadastro (próximo dia)"></i>
+                </button>
+                <br />
+                <span id="spanDateDisplay" style="margin: 11px 10px 0; display: inline-block;"></span>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <div id="productsGrid"></div>
+    </div>
+</div>
+    
+<div id="divSaveGrid">
+    <button id="btnSave" class="btn btn-default btn-sm hidden-md hidden-sm hidden-xs">Salvar Grid</button> &nbsp;
+    <button id="btnLoad" class="btn btn-default btn-sm hidden-md hidden-sm hidden-xs">Carregar Grid</button>
+</div>
+
+<div id="divSql">
+    <textarea id="sqlTextArea"></textarea>
+    <div style="margin-top: 10px;">
+        <button id="btnSendSql" class="btn btn-small btn-inverse">Enviar</button>
+    </div>
+</div>

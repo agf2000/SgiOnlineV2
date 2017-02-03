@@ -1,0 +1,10 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "window.zoomLevel": 0,
+    "editor.wrappingColumn": -1,
+    "workbench.editor.enablePreview": false,
+    "html.format.indentHandlebars": true,
+    "html.format.wrapLineLength": 0,
+    "files.autoSaveDelay": 4000,
+    "files.autoSave": "afterDelay"
+}

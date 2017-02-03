@@ -1,0 +1,59 @@
+<div class="x_panel">
+    <div class="x_title">
+        <h2>{{product.nome}}</h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <li>
+                {{#if product.anterior}}
+                <a class="btn-link" href="/produtos/{{product.anterior}}/codigo/desc" title="anterior">
+                    <i class="fa fa-chevron-left fa-2x"></i>
+                </a>
+            </li>
+            <li>
+                {{/if}}
+                {{#if product.proximo}}
+                    <a class="btn-link" href="/produtos/{{product.proximo}}/codigo/desc" title="Próximo">
+                        <i class="fa fa-chevron-right fa-2x"></i>
+                    </a>
+                {{/if}}
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <div class="col-md-7 col-sm-7 col-xs-12">
+            <div class="product-image">
+                <br>
+                {{#if product.foto}}
+                    <img src="{{product.foto}}" alt="imagem">
+                {{else}}
+                    <img src="/images/no-image.png" alt="imagem">
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="col-md-5 col-sm-5 col-xs-12" style="border:0px solid #e5e5e5;">
+            <br />
+            <p>{{product.desc_compl}}
+            </p>
+            <img id="imgBarCode" src="{{product.cod_barras}}">
+
+            <div>
+                <h2>Opções</h2>
+
+                <ul class="list-inline prod_color">
+                    <li>foreach: options</li>
+                    <li>
+                    </li>
+                </ul>
+            </div>
+            <br />
+
+            <div class="">
+                <div class="product_price">
+                    <h1 id="price" class="price">{{product.preco}}</h1>
+                    <span class="price-tax">{{product.referencia}}</span><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

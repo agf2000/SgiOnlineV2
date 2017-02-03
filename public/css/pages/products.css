@@ -1,0 +1,10 @@
+.k-grid td {
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.k-grid tr td {
+    border-right-width: 1px;
+}
