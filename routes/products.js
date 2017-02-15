@@ -15,17 +15,17 @@ var router = express.Router();
 router.get('/', function (req, res, next) {
   res.render('products', {
     title: 'Produtos',
-    css: ['pages/products.css'],
-    script: ['/js/app/utilities.js', '/js/pages/products.js']
+    css: ['/vendors/bootstrap-switch/bootstrap-switch.min.css', '/css/pages/products.css'],
+    script: ['/vendors/bootstrap-switch/bootstrap-switch.min.js', '/js/app/utilities.js', '/js/pages/products.js']
   });
 });
 
 /* GET product page. */
-router.get('/:productId/:orderBy/:orderDir', function (req, res, next) {
-  var productId = req.params.productId,
-      orderBy = req.params.orderBy,
-      orderDir = req.params.orderDir;
-  
+router.get('/:id/:orderBy/:orderDir', function (req, res, next) {
+  var productId = req.params.id,
+    orderBy = req.params.orderBy,
+    orderDir = req.params.orderDir;
+
   if (orderBy == "referencia") {
     orderBy = "p.referência";
   }

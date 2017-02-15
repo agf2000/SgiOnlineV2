@@ -1,0 +1,319 @@
+<div class="x_panel">
+    <div class="x_title">
+        Cadastro
+    </div>
+    <div class="x_content">
+        {{!--<div class="col-md-7 col-sm-7 col-xs-12">--}}
+        <form class="form-horizontal" id="clientForm" name="clientForm" role="form">
+            <div id="myTabContent" class="" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#basicTab" id="basic-tab" role="tab" data-toggle="tab" aria-expanded="true">Informações Principais</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#aditionalTab" role="tab" id="aditional-tab" data-toggle="tab" aria-expanded="false">Informações Adicionais</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#phoneTab" role="tab" id="phone-tab2" data-toggle="tab" aria-expanded="false">Telefones</a>
+                    </li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade active in" id="basicTab" aria-labelledby="basic-tab">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <div class="col-sm-8 col-lg-7 col-xs-push-2">
+                                <label class="radio-inline">
+                                    <input data-bind="checked: personType, enable: (personId() <= 0)" id="personType1" name="personType" type="radio" value="F">Física
+                                </label>
+                                <label class="radio-inline">
+                                    <input data-bind="checked: personType, enable: (personId() <= 0)" id="personType2" name="personType" type="radio" value="J">Jurídica
+                                </label>
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm clearfix">
+                            </div>
+
+                            <div class="col-lg-3 col-xs-push-2">
+                                <div class="checkbox checkbox-success">
+                                    <input checked id="chkBoxActive" type="checkbox"> <label for="chkBoxActive">Ativo</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxName">Nome:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control" data-content="Insira o nome completo." data-role="validate" id="txtBoxName" placeholder="Nome Completo" required="" title="Nome / Razão Social" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxDisplayName">Apelido:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control" id="txtBoxDisplayName" placeholder="Apelido / Fantasia" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group has-feedback">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxCpf_Cnpj">CPF:</label>
+
+                            <div class="col-xs-8 col-sm-4">
+                                <input class="form-control" data-inputmask="'mask' : '999.999.999-99'" id="txtBoxCpf_Cnpj" onkeyup="validateCpf_Cnpj(this);" type="text"> <span aria-hidden="true" class="glyphicon form-control-feedback"></span>
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxBirthDate">Data Nasc.:</label>
+                            <div class="adrSearch col-xs-8 col-sm-4">
+                                <input id="txtBoxBirthDate" type="text" data-inputmask="'mask' : '99/99/9999'" class="form-control" placeholder="Data de Nascimento">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxRg_InscEst">RG:</label>
+                            <div class="col-xs-8 col-sm-4">
+                                <input class="form-control" id="txtBoxRg_InscEst" placeholder="Identidade" type="text">
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+
+                            <label class="col-xs-4 col-sm-2 control-label hidden" for="txtBoxInscMun">Insc. Muni.:</label>
+                            <div class="col-xs-8 col-sm-4">
+                                <input class="form-control hidden" id="txtBoxInscMun" placeholder="Inscrição Municipal" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxContact">Contato:</label>
+                            <div class="col-xs-8 col-sm-4">
+                                <input class="form-control" id="txtBoxContact" placeholder="Contato" type="text">
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxTelephone">Telefone:</label>
+                            <div class="col-xs-8 col-sm-4">
+                                <input class="form-control" id="txtBoxTelephone" placeholder="Telefone" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxPersonAddress">Endereço:</label>
+
+                            <div class="adrSearch col-xs-8 col-sm-10">
+                                <div class="input-group">
+                                    <input id="txtBoxPersonAddress" type="text" class="form-control" placeholder="Cadastre novo endereço ou escolha um existente" disabled>
+                                    <span class="input-group-addon">
+                                <i class="fa fa-search" onclick="getAddressForm(this); return false;"></i>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxNumber">Número:</label>
+                            <div class="col-xs-8 col-sm-2">
+                                <input class="form-control" id="txtBoxNumber" placeholder="Número" type="text">
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+
+                            <label class="col-xs-4 col-sm-3 control-label" for="txtBoxComplement">Complemento:</label>
+                            <div class="col-xs-8 col-sm-5">
+                                <input class="form-control" id="txtBoxComplement" placeholder="Complemento do endereço" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxEmail">Email:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control" id="txtBoxEmail" placeholder="Endereço de e-mail" type="email">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="select2Classes">Classe:</label>
+                            <div class="col-xs-8 col-sm-3">
+                                <div class="input-group">
+                                    <select id="select2Classes" class="select2_single form-control" tabindex="-1" aria-hidden="true">
+                                <option></option>
+                            </select>
+                                    <span class="input-group-addon">
+                                <i class="fa fa-edit"></i>
+                            </span>
+                                </div>
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+
+                            <label class="col-xs-4 col-sm-2 control-label" for="select2Regions">Região:</label>
+                            <div class="col-xs-8 col-sm-5">
+                                <div class="input-group">
+                                    <select id="select2Regions" class="select2_single form-control" tabindex="-1" aria-hidden="true">
+                                <option></option>
+                            </select>
+                                    <span class="input-group-addon">
+                                <i class="fa fa-edit" onclick="getRegions(); return false;"></i>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textAreaComments">Observação:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <textarea class="form-control textArea" id="textAreaComments" placeholder="Comentários"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="aditionalTab" aria-labelledby="aditional-tab">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <div class="col-xs-10 col-xs-push-2">
+                                <div class="radio radio-success radio-inline">
+                                    <input checked id="person1" name="person" type="radio" value="M"> <label for="person1">Masculino</label>
+                                </div>
+
+                                <div class="radio radio-success radio-inline">
+                                    <input id="person2" name="person" type="radio" value="F"> <label for="person2">Feminino</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Nacionalidade:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control" id="txtBoxNationality" placeholder="Nacionalidade" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="txtBoxBirthPlace">Natural de:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control searchInput" id="txtBoxBirthPlace" placeholder="Cadastre uma nova cidade ou escolha uma existente" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Filiação:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control" id="txtBoxParents" placeholder="Filiação" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Estado Civil:</label>
+
+                            <div class="col-xs-8 col-sm-4">
+                                <select aria-hidden="true" class="select2_single form-control" id="select2Civil" tabindex="-1">
+                                    <option selected value="S">
+                                        Solteiro
+                                    </option>
+
+                                    <option value="C">
+                                        Casado
+                                    </option>
+
+                                    <option value="D">
+                                        Desquitado
+                                    </option>
+
+                                    <option value="V">
+                                        Viúvo
+                                    </option>
+
+                                    <option value="A">
+                                        Amasiado
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Profissão:</label>
+
+                            <div class="col-xs-8 col-sm-4">
+                                <input class="form-control" id="txtBoxProf" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Local Trab.:</label>
+
+                            <div class="col-xs-8 col-sm-10">
+                                <input class="form-control" id="txtBoxWorkPlace" placeholder="Local de Trabalho" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Endereço Trab.:</label>
+
+                            <div class="adrSearch col-xs-8 col-sm-10">
+                                <input id="txtBoxWorkAddress" type="text" class="form-control" placeholder="Cadastre novo endereço ou escolha um existente" disabled>
+                                <button onclick="getAddressForm(this); return false;" class="btn btn-default btn-flat btn-sm" type="button" value="2"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-xs-4 col-sm-2 control-label" for="textinput">Número:</label>
+
+                            <div class="col-xs-8 col-sm-2">
+                                <input class="form-control" id="txtBoxWorkNumber" placeholder="Número" type="text">
+                            </div>
+
+                            <div class="hidden-lg hidden-md hidden-sm form-group">
+                            </div>
+                            <label class="col-xs-4 col-sm-3 control-label" for="textinput">Complemento:</label>
+
+                            <div class="col-xs-8 col-sm-5">
+                                <input class="form-control" id="txtBoxWorkComplement" placeholder="Complemento do endereço" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="phoneTab" aria-labelledby="phone-tab">
+                        <div id="telephonesGrid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-left">
+                <button class="btnCancel btn btn-default btn-flat">Novo Cliente</button>
+                <button class="btnReturn btn btn-default btn-flat" value=""><i class="fa fa-arrow-left"></i> Consultar</button>
+            </div>
+
+            <div class="pull-right">
+                <button class="btnSavePerson btn btn-primary btn-flat">Salvar</button>
+            </div>
+
+            <div class="clearfix">
+            </div>
+        </form>
+        {{!--</div>--}}
+    </div>
+</div>

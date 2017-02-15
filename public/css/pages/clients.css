@@ -1,0 +1,33 @@
+#divSql {
+    display: none;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.k-grid td {
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.k-grid tr td {
+    border-right-width: 1px;
+}
+
+.k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+    min-width: 0 !important;
+}
+
+.k-grid tbody .k-button {
+    min-width: 12px;
+    width: 27px;
+    height: 27px;
+    overflow: hidden;
+}

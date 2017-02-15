@@ -49,7 +49,7 @@ exports.getProducts = function (req, res, orderBy, orderDir, pageIndex, pageSize
         });
 };
 
-exports.getProduct = function (req, res, productId, orderBy, orderDir) {
+exports.getProduct = function (req, res, id, orderBy, orderDir) {
 
     if (orderBy == "referencia")
     {
@@ -62,7 +62,7 @@ exports.getProduct = function (req, res, productId, orderBy, orderDir) {
         "(select top (1) nome from unidade where codigo = p.unidade) as nomeunidade, p.referência as referencia, p.promocaoqtderestante, " +
         "(select top 1 codigo from Produto where " + orderBy + " " + (orderDir == "asc" ? "<" : ">") + " p." + orderBy + " order by " + orderBy + (orderDir == "desc" ? "" : " desc") + ") as anterior, " +
         "(select top 1 codigo from Produto where " + orderBy + " " + (orderDir == "asc" ? ">" : "<") + " p." + orderBy + " order by " + orderBy + (orderDir == "desc" ? " desc" : "") + ") as proximo " +
-        "from view_produto p where codigo = " + productId;
+        "from view_produto p where codigo = " + id;
 
     db.querySql(sqlInst,
         function (data, err) {

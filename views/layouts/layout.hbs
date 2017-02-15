@@ -15,18 +15,18 @@
 	<!-- NProgress -->
 	<link href="/./vendors/nprogress/nprogress.css" rel="stylesheet">
 	<!-- kendo -->
-    <link href="/./vendors/kendo/2016.2.504/styles/kendo.common.min.css" rel="stylesheet" />
-    <link href="/./vendors/kendo/2016.2.504/styles/kendo.fiori.min.css" rel="stylesheet" />
+	<link href="/./vendors/kendo/2016.2.504/styles/kendo.common.min.css" rel="stylesheet" />
+	<link href="/./vendors/kendo/2016.2.504/styles/kendo.uniform.min.css" rel="stylesheet" />
 	<!-- pNotify -->
-    <link href="/./vendors/pnotify/css/pnotify.css" rel="stylesheet" />
-    <link href="/./vendors/pnotify/css/pnotify.buttons.css" rel="stylesheet" />
-	<!--moment -->
-    <script src="/./vendors/moment/min/moment.min.js"></script>
+	<link href="/./vendors/pnotify/css/pnotify.css" rel="stylesheet" />
+	<link href="/./vendors/pnotify/css/pnotify.buttons.css" rel="stylesheet" />
+	<!-- Select2 -->
+	<link href="/./vendors/select2/dist/css/select2.min.css" rel="stylesheet">
 	<!-- Custom Theme Style -->
 	<link href="/./build/css/custom.min.css" rel="stylesheet">
-  {{#each css}}
-    <link href="/./css/{{this}}" rel="stylesheet">
-  {{/each}}
+	{{#each css}}
+		<link href="{{this}}" rel="stylesheet">
+	{{/each}}
 </head>
 
 <body class="nav-md">
@@ -35,7 +35,7 @@
 			<div class="col-md-3 left_col">
 				<div class="left_col scroll-view">
 					<div class="navbar nav_title" style="border: 0;">
-						<a href="/" class="site_title"><i class="logo-mini">SGI</i> <span> - SOFTEK </span></a>
+						<a href="/" class="site_title"><span class="logo-mini">SGI</span> <i> - SOFTEK </i></a>
 					</div>
 					<div class="clearfix"></div>
 					<!-- menu profile quick info -->
@@ -184,6 +184,8 @@
 	<script src="/./vendors/jquery/dist/jquery.min.js"></script>
 	<!-- Bootstrap -->
 	<script src="/./vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!--moment -->
+	<script src="/./vendors/moment/min/moment.min.js"></script>
 	<!-- FastClick -->
 	<script src="/./vendors/fastclick/lib/fastclick.js"></script>
 	<!-- NProgress -->
@@ -191,18 +193,24 @@
 	<!-- jQuery Cookie -->
 	<script src="/./vendors/jquery.cookie/js.cookie.js"></script>
 	<!-- kendo -->
-    <script src="/./vendors/kendo/2016.2.504/js/kendo.web.min.js"></script>
+	<script src="/./vendors/kendo/2016.2.504/js/kendo.web.min.js"></script>
+	<!-- jQuery Loading Overlay -->
+	<script src="/./vendors/jquery-loading-overlay/js/loadingoverlay.min.js"></script>
+	<script src="/./vendors/jquery-loading-overlay/js/loadingoverlay_progress.min.js"></script>
 	<!-- pNotify -->
-    <script src="/./vendors/pnotify/js/pnotify.js"></script>
-    <script src="/./vendors/pnotify/js/pnotify.buttons.js"></script>
-    <script src="/./vendors/pnotify/js/pnotify.callbacks.js"></script>
-    <script src="/./vendors/pnotify/js/pnotify.confirm.js"></script>
-    <script src="/./vendors/pnotify/js/pnotify.mobile.js"></script>
+	<script src="/./vendors/pnotify/js/pnotify.js"></script>
+	<script src="/./vendors/pnotify/js/pnotify.buttons.js"></script>
+	<script src="/./vendors/pnotify/js/pnotify.callbacks.js"></script>
+	<script src="/./vendors/pnotify/js/pnotify.confirm.js"></script>
+	<script src="/./vendors/pnotify/js/pnotify.mobile.js"></script>
+	<!-- Select2 -->
+	<script src="/./vendors/select2/dist/js/select2.full.min.js"></script>
+	<script src="/./vendors/select2/dist/js/i18n/pt-BR.js"></script>
 	<!-- Custom Theme Scripts -->
 	<script src="/./build/js/custom.min.js"></script>
-  {{#each script}}
-    <script src="{{this}}"></script>
-  {{/each}}
+	{{#each script}}
+		<script src="{{this}}"></script>
+	{{/each}}
 </body>
 
 </html>

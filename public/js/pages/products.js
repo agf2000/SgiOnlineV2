@@ -16,25 +16,18 @@ $(function () {
     }
     rotation();*/
 
-    /*if (amplify.store.sessionStorage(document.location.host + "_user_loggedin") > 0) {
+    if (my.userInfo === undefined) {
+        my.userInfo = $.parseJSON(Cookies.getJSON('SGIUser').replace('j:', ''))
+        /*$.get('/api/getUserInfo', function (user) {
+            if (user) {
+                my.userInfo = user;  
 
-        my.userInfo = JSON.parse(amplify.store.sessionStorage(document.location.host + "_user"));
-
-        my.admin = my.userInfo.Adm;
-
-        $('.overlay').remove();
-
-        $.get('/dnn/desktopmodules/sgi/api/services/UserAuthenticated', function (auth) {
-            if (auth) {
-                productsGrid.dataSource.read();
-                window.setInterval("keepSessionAlive()", 900000);
-            } else {
-                window.location.href = '/login.html?next=' + document.location.pathname;
+                QuickTips();              
             }
-        });
-    } else {
-        window.location.href = '/login.html?next=' + document.location.pathname;
-    }*/
+        });*/
+    }
+
+    $(".x_content").LoadingOverlay("show");
 
     $('#kddlConditions').kendoDropDownList();
 
@@ -157,7 +150,7 @@ $(function () {
                 field: "codigo", title: "Código", width: 75, template: '#= my.padLeft(codigo, 6) #', attributes: { 'tag': "1" }
             },
             {
-                field: "nome", title: "Descrição", width: 350, template: '<a href="/produtos?codigo=#= codigo #&orderby=' + orderBy + '&orderdir=' + orderDir + '" target="_blank">#= nome #</a>', attributes: { 'tag': "1" }
+                field: "nome", title: "Descrição", width: 350, template: '<a href="/produtos/#= codigo #/' + orderBy + '/' + orderDir + '" target="_blank">#= nome #</a>', attributes: { 'tag': "1" }
             },
             {
                 field: "nomeUnidade", title: "Unidade", width: 90, sortable: false, attributes: { 'tag': "0" }
@@ -245,6 +238,7 @@ $(function () {
             });
 
             $('#spanDateDisplay').html(moment(todayDate).format('DD/MM/YYYY'));
+            $(".x_content").LoadingOverlay("hide", true);
         },
         columnMenu: {
             messages: {

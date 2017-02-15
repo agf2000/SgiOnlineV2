@@ -13,7 +13,7 @@ var router = express.Router();
 router.get('/', function (req, res, next) {
   res.render('index', {
     title: 'Início',
-    css: ['pages/index.css'],
+    css: ['css/pages/index.css'],
     script: ['/js/pages/index.js']
   });
 });

@@ -1,3 +1,7 @@
+#divSql {
+    display: none;
+}
+
 .k-grid td {
     white-space: nowrap;
     -ms-text-overflow: ellipsis;

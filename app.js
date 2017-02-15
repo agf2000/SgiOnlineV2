@@ -15,6 +15,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('hbs', hbs({
 	extname: 'hbs',
 	defaultLayout: 'layout',
+	helpers: require("handlebars-form-helpers"),
 	layoutsDir: path.join(__dirname, '/views/layouts/'),
 	partialsDir: path.join(__dirname, '/views/partials/')
 }));
@@ -57,6 +58,9 @@ app.use('/', index);
 
 var products = require('./routes/products');
 app.use('/produtos', products);
+
+var clients = require('./routes/clients');
+app.use('/clientes', clients);
 
 var users = require('./routes/users');
 app.use('/users', users);
