@@ -6,8 +6,13 @@ router.get('/addressForm', function (req, res, next) {
     res.render('templates/addressForm', {
         layout: false,
         title: 'Endereço'
-        // css: ['css/pages/clients.css'],
-        // script: ['/js/app/utilities.js', '/js/templates/addressForm.js']
+    });
+});
+
+router.get('/classesForm', function (req, res, next) {
+    res.render('templates/classesForm', {
+        layout: false,
+        title: 'Classes'
     });
 });
 

@@ -1,0 +1,23 @@
+[{
+  "marital_statuses": [{
+      "id": "C",
+      "name": "Casado"
+    },
+    {
+      "id": "S",
+      "name": "Solteiro"
+    },
+    {
+      "id": "D",
+      "name": "Desquitado"
+    },
+    {
+      "id": "V",
+      "name": "Viúvo"
+    },
+    {
+      "id": "A",
+      "name": "Amasiado"
+    }
+  ]
+}]

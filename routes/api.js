@@ -2,6 +2,7 @@ var express = require("express");
 var productsController = require("../controllers/productsController");
 var clientsController = require("../controllers/clientsController");
 var servicesController = require("../controllers/servicesController");
+var jsonData = require("../data/jsonData");
 
 var router = express.Router();
 
@@ -46,11 +47,15 @@ router.get('/getCountries/:filter', function (req, res) {
 });
 
 router.get('/getClasses', function (req, res) {
-	servicesController.getClasses(req, res, (req.query.filter || "''"), (req.query.pageIndex || 1), (req.query.pageSize || 10));
+	servicesController.getClasses(req, res, req.query.filter, req.query.pageIndex, req.query.pageSize);
 });
 
 router.get('/getRegions', function (req, res) {
-	servicesController.getRegions(req, res, (req.query.filter || "''"), (req.query.pageIndex || 1), (req.query.pageSize || 10));
+	servicesController.getRegions(req, res, req.query.filter, req.query.pageIndex, req.query.pageSize);
+});
+
+router.get('/getJSONData', function (req, res) {
+	res.send(jsonData);
 });
 
 router.get('/getProfessions/:filter', function (req, res) {

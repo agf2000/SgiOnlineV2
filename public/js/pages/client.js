@@ -36,10 +36,14 @@ $(function () {
             delay: 250,
             data: function (params) {
                 return {
-                    filter: params.term
+                    filter: params.term || "",
+                    pageIndex: params.page || 1,
+                    pageSize: 10
                 };
             },
-            processResults: function (data, page) {
+            processResults: function (data, params) {
+
+                params.page = params.page || 1;
 
                 var results = [];
 
@@ -50,10 +54,13 @@ $(function () {
                     //o.description = v.Descricao;
                     //o.value = v.codigo;
                     results.push(o);
-                })
+                });
 
                 return {
-                    results: results
+                    results: results,
+                    pagination: {
+                        more: (params.page * 10) < data[0].total_count
+                    }
                 };
             },
             cache: true
@@ -82,10 +89,14 @@ $(function () {
             delay: 250,
             data: function (params) {
                 return {
-                    filter: params.term
+                    filter: params.term || "",
+                    pageIndex: params.page || 1,
+                    pageSize: 10
                 };
             },
-            processResults: function (data, page) {
+            processResults: function (data, params) {
+
+                params.page = params.page || 1;
 
                 var results = [];
 
@@ -96,10 +107,13 @@ $(function () {
                     //o.description = v.Descricao;
                     //o.value = v.codigo;
                     results.push(o);
-                })
+                });
 
                 return {
-                    results: results
+                    results: results,
+                    pagination: {
+                        more: (params.page * 10) < data[0].total_count
+                    }
                 };
             },
             cache: true
@@ -108,7 +122,7 @@ $(function () {
             return markup;
         },
         minimumInputLength: -1,
-        // dropdownCssClass: 'bigdrop1',
+        minimumResultsForSearch: -1,
         templateResult: function (repo) {
             if (repo.loading) return repo.text;
             var markup = '<option value="' + repo.id + '">' + repo.name + '</option>'
@@ -120,8 +134,38 @@ $(function () {
     });
 
     $('#select2Civil').select2({
+        placeholder: "Estado Civil",
+        width: '100%',
+        language: "pt-BR",
+        ajax: {
+            url: "/api/getJSONData",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data, params) {
+                return {
+                    results: data[0].marital_statuses
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        minimumInputLength: -1,
         minimumResultsForSearch: -1,
-        width: '100%'
+        templateResult: function (repo) {
+            if (repo.loading) return repo.text;
+            var markup = '<option value="' + repo.id + '">' + repo.name + '</option>'
+            return markup;
+        },
+        templateSelection: function (repo) {
+            return repo.name || repo.text;
+        }
     });
 
     $('.btnSavePerson').click(function (e) {
@@ -1026,17 +1070,19 @@ function getClient(clientId) {
                 my.birthPlaceId = client.naturalidade;
             }
             $('#txtBoxParents').val(client.filiacao);
-            $('#select2Civil').remove();
+
             if (client.estado_civil) {
                 if (client.estado_civil.trim() != '') {
                     $('#select2Civil').append($('<option value="' + client.estado_civil + '" selected>' + $('#select2Civil option[value=' + client.estado_civil + ']').text() + '</option>'));
                     $('#select2Civil').trigger("change");
                 }
             }
+
             if (client.profissao > 0) {
                 $('#txtBoxProf').val(client.nome_profissao);
                 my.profId = client.profissao;
             }
+
             $('#txtBoxWorkPlace').val(client.local_trabalho);
             $('#txtBoxWorkNumber').val(client.numero_trabalho);
             $('#txtBoxWorkComplement').val(client.complemento_trabalho);

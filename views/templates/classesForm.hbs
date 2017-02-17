@@ -1,187 +1,140 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Classe</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}}</title>
+    {{!--<!-- Bootstrap -->
+    <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="/vendors/animate.css/animate.min.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="/./vendors/select2/dist/css/select2.min.css" rel="stylesheet">--}}
+    <!-- Custom Theme Style -->
+    {{!--<link href="/build/css/custom.min.css" rel="stylesheet">--}}
 </head>
+
 <body>
-<div id="classesGrid"></div>
-<script>
-    $(function () {
-        "use strict"
-        
-        $('#classesGrid').kendoGrid({
-            toolbar: ["create"],
-            dataSource: new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: '/dnn/desktopmodules/sgi/api/people/GetSGIClasses'
-                    },
-                    parameterMap: function (data, type) {
-                        return {
-                            filter: '',
-                            pageIndex: data.page,
-                            pageSize: data.pageSize
-                        };
-                    }
-                },
-                pageSize: 10,
-                serverPaging: true,
-                serverSorting: true,
-                serverFiltering: true,
-                sort: {field: "Codigo", dir: "DESC"},
-                schema: {
-                    model: {
-                        id: 'Codigo',
-                        fields: {
-                            Codigo: {
-                                editable: false, nullable: false
-                            },
-                            DATA_ALTERACAO: {
-                                type: "date", format: "{0:MM/dd/yyyy}"
-                            },
-                            DATA_CADASTRO: {
-                                type: "date", format: "{0:dd/MM/yyyy}"
-                            }
+    <div id="classesGrid"></div>
+
+    {{!--<!-- jQuery -->
+    <script src="/./vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/./vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="/./vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/./vendors/nprogress/nprogress.js"></script>
+    <!-- jQuery Cookie -->
+    <script src="/./vendors/jquery.cookie/js.cookie.js"></script>
+    <!-- amplify -->
+    <script src="/./vendors/amplify/amplify.min.js"></script>
+    <!-- input mask -->
+    <script src="/./vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <!-- typeahead -->
+    <script src="/./vendors/typeahead/typeahead.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="/./vendors/select2/dist/js/select2.full.min.js"></script>
+    <script src="/./vendors/select2/dist/js/i18n/pt-BR.js"></script>
+    <!-- bootstrap validator -->
+    <script src="/./vendors/bootstrap-validator/dist/validator.min.js"></script>
+    <!-- utilities -->
+    <script src="/./js/app/utilities.js"></script>--}}
+
+    <script>
+        $(function () {
+            "use strict"
+
+            $('#classesGrid').kendoGrid({
+                toolbar: ["create"],
+                dataSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: '/api/getClasses'
+                        },
+                        parameterMap: function (data, type) {
+                            return {
+                                filter: '',
+                                pageIndex: data.page,
+                                pageSize: data.pageSize
+                            };
                         }
                     },
-                    data: 'data',
-                    total: 'total'
-                }
-            }),
-            editable: true,
-            selectable: 'row',
-            change: function (e) {
-                var row = this.select();
-                var id = row.data("uid");
-                my.uId = id;
-            },
-            columns: [
-                {
-                    field: "Codigo", hidden: true
-                },
-                {
-                    field: 'Nome'
-                },
-                {
-                    field: "Descricao"
-                },
-                {
-                    command: [
-                        {
-                            name: 'update',
-                            text: '',
-                            click: function (e) {
-                                e.preventDefault();
-
-                                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-
-                                if (dataItem) {
-                                    var params = {
-                                        Codigo: dataItem.Codigo,
-                                        Nome: dataItem.Nome,
-                                        Descricao: dataItem.Descricao
-                                    }
-
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/dnn/desktopmodules/sgi/api/people/SaveSGIClasse',
-                                        data: params
-                                    }).done(function (response) {
-                                        if (response.Result.indexOf("success") !== -1) {
-                                            if (dataItem.Codigo > 0) {
-                                                var notice = new PNotify({
-                                                    title: 'Sucesso!',
-                                                    text: 'Classe atualizada.',
-                                                    type: 'success',
-                                                    animation: 'none',
-                                                    addclass: 'stack-bottomright',
-                                                    stack: my.stack_bottomright
-                                                });
-                                                notice.get().click(function () {
-                                                    notice.remove();
-                                                });
-                                            } else {
-                                                var notice1 = new PNotify({
-                                                    title: 'Sucesso!',
-                                                    text: 'Nova classe inserida.',
-                                                    type: 'success',
-                                                    animation: 'none',
-                                                    addclass: 'stack-bottomright',
-                                                    stack: my.stack_bottomright
-                                                });
-                                                notice1.get().click(function () {
-                                                    notice1.remove();
-                                                });
-                                            }
-
-                                            dataItem.set('Codigo', response.Classe.Codigo);
-                                            dataItem.set('Nome', response.Classe.Nome);
-                                            dataItem.set('Descricao', response.Classe.Descricao);
-                                            $('#classesGrid').data('kendoGrid').refresh();
-
-                                        } else {
-                                            var notice2 = new PNotify({
-                                                title: 'Atenção!',
-                                                text: response.Result + '<br /><br />' + response.Msg,
-                                                type: 'error',
-                                                animation: 'none',
-                                                addclass: 'stack-bottomright',
-                                                stack: my.stack_bottomright
-                                            });
-                                            notice2.get().click(function () {
-                                                notice2.remove();
-                                            });
-                                        }
-                                    }).fail(function (jqXHR, textStatus) {
-                                        console.log(jqXHR.responseText);
-                                        var notice3 = new PNotify({
-                                            title: 'Atenção!',
-                                            text: 'Erro ao tentar executar a ação.<br /> Mais informações no log do navegador.',
-                                            type: 'error',
-                                            animation: 'none',
-                                            addclass: 'stack-bottomright',
-                                            stack: my.stack_bottomright
-                                        });
-                                        notice3.get().click(function () {
-                                            notice3.remove();
-                                        });
-                                    });
+                    pageSize: 10,
+                    serverPaging: true,
+                    serverSorting: true,
+                    serverFiltering: true,
+                    sort: { field: "codigo", dir: "DESC" },
+                    schema: {
+                        model: {
+                            id: 'codigo',
+                            fields: {
+                                codigo: {
+                                    editable: false, nullable: false
+                                },
+                                data_alteracao: {
+                                    type: "date", format: "{0:MM/dd/yyyy}"
+                                },
+                                data_cadastro: {
+                                    type: "date", format: "{0:dd/MM/yyyy}"
                                 }
                             }
                         },
-                        {
-                            name: 'remove',
-                            text: '',
-                            class: '',
-                            imageClass: 'k-icon k-delete',
-                            click: function (e) {
-                                e.preventDefault();
+                        // total: 'total'
+                    }
+                }),
+                editable: true,
+                selectable: 'row',
+                change: function (e) {
+                    var row = this.select();
+                    var id = row.data("uid");
+                    my.uId = id;
+                },
+                columns: [
+                    {
+                        field: "codigo", hidden: true
+                    },
+                    {
+                        field: 'nome'
+                    },
+                    {
+                        field: "descricao"
+                    },
+                    {
+                        command: [
+                            {
+                                name: 'update',
+                                text: '',
+                                click: function (e) {
+                                    e.preventDefault();
 
-                                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-                                if (dataItem) {
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
 
-                                    swal({
-                                        title: 'Tem certeza?',
-                                        text: "Esta ação não poderá ser revertida!",
-                                        type: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: "#DD6B55",
-                                        confirmButtonText: "Sim, quero excluir!",
-                                        cancelButtonText: "Não, cancele!",
-                                        closeOnConfirm: true,
-                                        closeOnCancel: true
-                                    }).then(function (isConfirm) {
-                                        if (isConfirm) {
+                                    if (dataItem) {
+                                        var params = {
+                                            codigo: dataItem.codigo,
+                                            nome: dataItem.nome,
+                                            descricao: dataItem.descricao
+                                        }
 
-                                            $.ajax({
-                                                type: 'DELETE',
-                                                url: '/dnn/desktopmodules/sgi/api/people/RemoveSGIClasse?classeId=' + dataItem.Codigo
-                                            }).done(function (data) {
-                                                if (data.Result.indexOf("success") !== -1) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '/api/saveClass',
+                                            data: params
+                                        }).done(function (response) {
+                                            if (!data.message) {
+                                                if (dataItem.codigo > 0) {
                                                     var notice = new PNotify({
                                                         title: 'Sucesso!',
-                                                        text: 'Classe removida.',
+                                                        text: 'Classe atualizada.',
                                                         type: 'success',
                                                         animation: 'none',
                                                         addclass: 'stack-bottomright',
@@ -190,12 +143,11 @@
                                                     notice.get().click(function () {
                                                         notice.remove();
                                                     });
-                                                    $('#classesGrid').data('kendoGrid').dataSource.remove(dataItem);
                                                 } else {
                                                     var notice1 = new PNotify({
-                                                        title: 'Atenção!',
-                                                        text: (data.Msg.indexOf('conflitou') > 0 ? 'O registro não pode ser excluido. Isto causaria inconsistência no baco de dados.' : 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />') + (data.Msg || data.Result),
-                                                        type: 'error',
+                                                        title: 'Sucesso!',
+                                                        text: 'Nova classe inserida.',
+                                                        type: 'success',
                                                         animation: 'none',
                                                         addclass: 'stack-bottomright',
                                                         stack: my.stack_bottomright
@@ -204,11 +156,16 @@
                                                         notice1.remove();
                                                     });
                                                 }
-                                            }).fail(function (jqXHR, textStatus) {
-                                                console.log(jqXHR.responseText);
+
+                                                dataItem.set('codigo', response.Classe.codigo);
+                                                dataItem.set('nome', response.Classe.nome);
+                                                dataItem.set('descricao', response.Classe.descricao);
+                                                $('#classesGrid').data('kendoGrid').refresh();
+
+                                            } else {
                                                 var notice2 = new PNotify({
                                                     title: 'Atenção!',
-                                                    text: 'Erro ao tentar executar a ação.<br /> Mais informações no log do navegador.',
+                                                    text: response.Result + '<br /><br />' + response.Msg,
                                                     type: 'error',
                                                     animation: 'none',
                                                     addclass: 'stack-bottomright',
@@ -217,38 +174,120 @@
                                                 notice2.get().click(function () {
                                                     notice2.remove();
                                                 });
-                                            });
-                                        } else {
-                                            var notice = new PNotify({
-                                                title: 'Cancelado!',
-                                                text: 'Classe não excluida.',
-                                                type: 'warning',
+                                            }
+                                        }).fail(function (jqXHR, textStatus) {
+                                            console.log(jqXHR.responseText);
+                                            var notice3 = new PNotify({
+                                                title: 'Atenção!',
+                                                text: 'Erro ao tentar executar a ação.<br /> Mais informações no log do navegador.',
+                                                type: 'error',
                                                 animation: 'none',
                                                 addclass: 'stack-bottomright',
                                                 stack: my.stack_bottomright
                                             });
-                                            notice.get().click(function () {
-                                                notice.remove();
+                                            notice3.get().click(function () {
+                                                notice3.remove();
                                             });
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
-                            }
-                        },
-                    ],
-                    title: "&nbsp;",
-                    width: "80px"
+                            },
+                            {
+                                name: 'remove',
+                                text: '',
+                                class: '',
+                                imageClass: 'k-icon k-delete',
+                                click: function (e) {
+                                    e.preventDefault();
+
+                                    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                    if (dataItem) {
+
+                                        swal({
+                                            title: 'Tem certeza?',
+                                            text: "Esta ação não poderá ser revertida!",
+                                            type: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#DD6B55",
+                                            confirmButtonText: "Sim, quero excluir!",
+                                            cancelButtonText: "Não, cancele!",
+                                            closeOnConfirm: true,
+                                            closeOnCancel: true
+                                        }).then(function (isConfirm) {
+                                            if (isConfirm) {
+
+                                                $.ajax({
+                                                    type: 'DELETE',
+                                                    url: '/api/removeClass?id=' + dataItem.codigo
+                                                }).done(function (data) {
+                                                    if (data.Result.indexOf("success") !== -1) {
+                                                        var notice = new PNotify({
+                                                            title: 'Sucesso!',
+                                                            text: 'Classe removida.',
+                                                            type: 'success',
+                                                            animation: 'none',
+                                                            addclass: 'stack-bottomright',
+                                                            stack: my.stack_bottomright
+                                                        });
+                                                        notice.get().click(function () {
+                                                            notice.remove();
+                                                        });
+                                                        $('#classesGrid').data('kendoGrid').dataSource.remove(dataItem);
+                                                    } else {
+                                                        var notice1 = new PNotify({
+                                                            title: 'Atenção!',
+                                                            text: (data.Msg.indexOf('conflitou') > 0 ? 'O registro não pode ser excluido. Isto causaria inconsistência no baco de dados.' : 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />') + (data.Msg || data.Result),
+                                                            type: 'error',
+                                                            animation: 'none',
+                                                            addclass: 'stack-bottomright',
+                                                            stack: my.stack_bottomright
+                                                        });
+                                                        notice1.get().click(function () {
+                                                            notice1.remove();
+                                                        });
+                                                    }
+                                                }).fail(function (jqXHR, textStatus) {
+                                                    console.log(jqXHR.responseText);
+                                                    var notice2 = new PNotify({
+                                                        title: 'Atenção!',
+                                                        text: 'Erro ao tentar executar a ação.<br /> Mais informações no log do navegador.',
+                                                        type: 'error',
+                                                        animation: 'none',
+                                                        addclass: 'stack-bottomright',
+                                                        stack: my.stack_bottomright
+                                                    });
+                                                    notice2.get().click(function () {
+                                                        notice2.remove();
+                                                    });
+                                                });
+                                            } else {
+                                                var notice = new PNotify({
+                                                    title: 'Cancelado!',
+                                                    text: 'Classe não excluida.',
+                                                    type: 'warning',
+                                                    animation: 'none',
+                                                    addclass: 'stack-bottomright',
+                                                    stack: my.stack_bottomright
+                                                });
+                                                notice.get().click(function () {
+                                                    notice.remove();
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            },
+                        ],
+                        title: "&nbsp;",
+                        width: "80px"
+                    }
+                ],
+                scrollable: {
+                    virtual: true
                 }
-            ],
-            pageable: {
-                pageSizes: false,
-                info: false,
-                refresh: true,
-                numeric: true,
-                previousNext: true
-            }
+            });
         });
-    });
-</script>
+    </script>
 </body>
+
 </html>

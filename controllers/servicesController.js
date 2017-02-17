@@ -62,7 +62,7 @@ exports.getCountries = function (req, res, filter) {
 exports.getClasses = function (req, res, filter, pageIndex, pageSize) {
     try {
         var sqlInst = "select top(" + pageSize + ") * from (select rowid = row_number() over (order by c.nome), c.*, ";
-        sqlInst += "totalRows = count(*) over() from classes c where (" + filter + " = '' or c.nome like '" + filter + "%') ";
+        sqlInst += "total_count = count(*) over() from classes c where ('" + filter + "' = '' or c.nome like '" + filter + "%') ";
         sqlInst += ") a where a.rowid > ((" + pageIndex + " - 1) * " + pageSize + ")";
 
         db.querySql(sqlInst,
@@ -78,6 +78,7 @@ exports.getClasses = function (req, res, filter, pageIndex, pageSize) {
                     res.writeHead(200, {
                         "Content-Type": "application/json"
                     });
+                    // data.push({ 'total': data[0].total_count });
                     res.write(JSON.stringify(data).replace(/"([\w]+)":/g, function ($0, $1) {
                         return ('"' + $1.toLowerCase() + '":');
                     }));
@@ -93,7 +94,7 @@ exports.getClasses = function (req, res, filter, pageIndex, pageSize) {
 exports.getRegions = function (req, res, filter, pageIndex, pageSize) {
     try {
         var sqlInst = "select top(" + pageSize + ") * from (select rowid = row_number() over (order by c.nome), c.*, ";
-        sqlInst += "totalRows = count(*) over() from regioes c where (" + filter + " = '' or c.nome like '" + filter + "%') ";
+        sqlInst += "total_count = count(*) over() from regioes c where ('" + filter + "' = '' or c.nome like '" + filter + "%') ";
         sqlInst += ") a where a.rowid > ((" + pageIndex + " - 1) * " + pageSize + ")";
 
         db.querySql(sqlInst,
