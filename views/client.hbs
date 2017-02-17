@@ -20,10 +20,10 @@
                         <div class="form-group">
                             <div class="col-sm-8 col-lg-7 col-xs-push-2">
                                 <label class="radio-inline">
-                                    <input data-bind="checked: personType, enable: (personId() <= 0)" id="personType1" name="personType" type="radio" value="F">Física
+                                    <input id="personType1" name="personType" type="radio" value="F">Física
                                 </label>
                                 <label class="radio-inline">
-                                    <input data-bind="checked: personType, enable: (personId() <= 0)" id="personType2" name="personType" type="radio" value="J">Jurídica
+                                    <input id="personType2" name="personType" type="radio" value="J">Jurídica
                                 </label>
                             </div>
 
@@ -111,9 +111,11 @@
                             <div class="adrSearch col-xs-8 col-sm-10">
                                 <div class="input-group">
                                     <input id="txtBoxPersonAddress" type="text" class="form-control" placeholder="Cadastre novo endereço ou escolha um existente" disabled>
-                                    <span class="input-group-addon">
-                                <i class="fa fa-search" onclick="getAddressForm(this); return false;"></i>
-                            </span>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" onclick="getAddressForm(this); return false;" value="1">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -149,11 +151,13 @@
                             <div class="col-xs-8 col-sm-3">
                                 <div class="input-group">
                                     <select id="select2Classes" class="select2_single form-control" tabindex="-1" aria-hidden="true">
-                                <option></option>
-                            </select>
-                                    <span class="input-group-addon">
-                                <i class="fa fa-edit"></i>
-                            </span>
+                                        <option></option>
+                                    </select>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" onclick="getClasses(); return false;" value="1">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
 
@@ -164,11 +168,13 @@
                             <div class="col-xs-8 col-sm-5">
                                 <div class="input-group">
                                     <select id="select2Regions" class="select2_single form-control" tabindex="-1" aria-hidden="true">
-                                <option></option>
-                            </select>
-                                    <span class="input-group-addon">
-                                <i class="fa fa-edit" onclick="getRegions(); return false;"></i>
-                            </span>
+                                        <option></option>
+                                    </select>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" onclick="getRegions(this); return false;" value="1">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -185,14 +191,13 @@
                     <div role="tabpanel" class="tab-pane fade" id="aditionalTab" aria-labelledby="aditional-tab">
                         <!-- Text input-->
                         <div class="form-group">
-                            <div class="col-xs-10 col-xs-push-2">
-                                <div class="radio radio-success radio-inline">
-                                    <input checked id="person1" name="person" type="radio" value="M"> <label for="person1">Masculino</label>
-                                </div>
-
-                                <div class="radio radio-success radio-inline">
-                                    <input id="person2" name="person" type="radio" value="F"> <label for="person2">Feminino</label>
-                                </div>
+                            <div class="col-sm-8 col-lg-7 col-xs-push-2">
+                                <label class="radio-inline">
+                                    <input id="person1" name="person" type="radio" value="M">Masculino
+                                </label>
+                                <label class="radio-inline">
+                                    <input id="person2" name="person" type="radio" value="F">Feminino
+                                </label>
                             </div>
                         </div>
 
@@ -228,23 +233,19 @@
                             <label class="col-xs-4 col-sm-2 control-label" for="textinput">Estado Civil:</label>
 
                             <div class="col-xs-8 col-sm-4">
-                                <select aria-hidden="true" class="select2_single form-control" id="select2Civil" tabindex="-1">
+                                <select id="select2Civil" class="select2_single form-control" tabindex="-1" aria-hidden="true">
                                     <option selected value="S">
                                         Solteiro
                                     </option>
-
                                     <option value="C">
                                         Casado
                                     </option>
-
                                     <option value="D">
                                         Desquitado
                                     </option>
-
                                     <option value="V">
                                         Viúvo
                                     </option>
-
                                     <option value="A">
                                         Amasiado
                                     </option>
@@ -274,8 +275,12 @@
                             <label class="col-xs-4 col-sm-2 control-label" for="textinput">Endereço Trab.:</label>
 
                             <div class="adrSearch col-xs-8 col-sm-10">
-                                <input id="txtBoxWorkAddress" type="text" class="form-control" placeholder="Cadastre novo endereço ou escolha um existente" disabled>
-                                <button onclick="getAddressForm(this); return false;" class="btn btn-default btn-flat btn-sm" type="button" value="2"><i class="fa fa-search"></i></button>
+                                <div class="input-group">
+                                    <input id="txtBoxWorkAddress" type="text" class="form-control" placeholder="Cadastre novo endereço ou escolha um existente" disabled>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-search" onclick="getAddressForm(this); return false;"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 

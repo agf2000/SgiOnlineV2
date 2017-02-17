@@ -46,16 +46,17 @@ router.get('/:id', function (req, res, next) {
     css: [
       '/vendors/select2/dist/css/select2.min.css',
       '/vendors/bootstrap-daterangepicker/daterangepicker.css',
-      // '/vendors/bootstrap-switch/bootstrap-switch.min.css',
+      '/vendors/bootstrap-dialog/css/bootstrap-dialog.min.css',
       '/css/pages/client.css'
     ],
     script: [
       '/vendors/select2/dist/js/select2.full.min.js',
-      '/vendors/select2/dist/js/i18n/pt-BR.js',
+      // '/vendors/select2/dist/js/i18n/pt-BR.js',
       '/vendors/bootstrap-daterangepicker/daterangepicker.js',
       '/vendors/typeahead/typeahead.bundle.min.js',
-      // '/vendors/bootstrap-switch/bootstrap-switch.min.js',
+      '/vendors/bootstrap-dialog/js/bootstrap-dialog.min.js',
       '/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js',
+      '/vendors/bootstrap-validator/dist/validator.min.js',
       '/js/app/utilities.js',
       '/js/pages/client.js'
     ],

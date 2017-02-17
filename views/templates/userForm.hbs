@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-12">
+            <h5>
+                As informações abaixo foram retiradas da tabela de funcionários. Favor rever-las antes de clicar em salvar.
+                Todos os campos são de preenchimento obrigatório!
+            </h5>
+            <form class="form-horizontal" id="userForm" name="userForm" role="form">
+                <div class="form-group">
+                    <label for="txtBoxDisplayName" class="col-sm-2 control-label">Apelido:</label>
+                    <div class="col-sm-9">
+                        <input id="txtBoxDisplayName" type="text" class="form-control" data-content="Insira o nome completo ou um apelido." data-role="validate" title="Nome Completo ou Apelido" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtBoxName" class="col-sm-2 control-label">Nome:</label>
+                    <div class="col-sm-9">
+                        <input id="txtBoxName" type="text" class="form-control" data-content="Insira seu nome." data-role="validate" title="Seu primeiro nome" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtBoxLastName" class="col-sm-2 control-label">Sobrenome:</label>
+                    <div class="col-sm-9">
+                        <input id="txtBoxLastName" type="text" class="form-control" data-content="Insira seu sobrenome." data-role="validate" title="Seu Sobrenome" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtBoxEmail" class="col-sm-2 control-label">Email:</label>
+                    <div class="col-sm-9">
+                        <input id="txtBoxEmail" type="text" class="form-control" data-content="Insira seu endereço de email." data-role="validate" title="Email" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <span class="spanStatus text-danger"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

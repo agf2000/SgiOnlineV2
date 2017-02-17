@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+
+    <form autocomplete="off" id="signinForm" name="signinForm" role="form">
+        <fieldset>
+            <div class="row">
+                <div class="col-sm-12 col-md-10 col-md-offset-1">
+                    <span class="status"></span>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span> <input class="form-control" id="txtLogin" placeholder="Código" type="text" value="" autocomplete="off" onfocus="this.select();">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span> <input autocomplete="off" class="form-control" id="txtPassword" onfocus="$(this).removeAttr('readonly'); this.select();" placeholder="Senha" readonly type="password" value="">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group login-group-checkbox">
+                        <input id="lg_once" name="lg_once" type="checkbox"> <label for="lg_once">Não requisitar mais a senha para essa operação</label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <script>
+        'use strict';
+
+        $(function () {
+
+            $('#txtLogin').keyup(function (e) {
+                if (e.target.value.length > 1) {
+                    $('#txtPassword').focus();
+                }
+            });
+
+            $('#txtLogin').focusin(function (e) {
+                $('#txtLogin').val(null);
+            });
+
+            window.setTimeout(function () {
+                $('#txtLogin').focus();
+            }, 500);
+
+        });
+    </script>
+
+</body>
+</html>

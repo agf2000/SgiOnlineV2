@@ -65,6 +65,9 @@ app.use('/clientes', clients);
 var users = require('./routes/users');
 app.use('/users', users);
 
+var templates = require('./routes/templates');
+app.use('/templates', templates);
+
 var api = require('./routes/api');
 app.use('/api', api);
 

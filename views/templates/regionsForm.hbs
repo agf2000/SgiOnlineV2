@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Regiões</title>
+</head>
+<body>
+<div id="regionsGrid"></div>
+<script>
+    $(function () {
+        "use strict"
+
+        $('#regionsGrid').kendoGrid({
+            toolbar: ["create"],
+            dataSource: new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: '/dnn/desktopmodules/sgi/api/people/GetSGIRegions'
+                    },
+                    parameterMap: function (data, type) {
+                        return {
+                            filter: '',
+                            pageIndex: data.page,
+                            pageSize: data.pageSize
+                        };
+                    }
+                },
+                pageSize: 10,
+                serverPaging: true,
+                serverSorting: true,
+                serverFiltering: true,
+                sort: { field: "Codigo", dir: "DESC" },
+                schema: {
+                    model: {
+                        id: 'Codigo',
+                        fields: {
+                            Codigo: {
+                                editable: false, nullable: false
+                            },
+                            DATA_ALTERACAO: {
+                                type: "date", format: "{0:MM/dd/yyyy}"
+                            },
+                            DATA_CADASTRO: {
+                                type: "date", format: "{0:dd/MM/yyyy}"
+                            }
+                        }
+                    },
+                    data: 'data',
+                    total: 'total'
+                }
+            }),
+            editable: true,
+            selectable: 'row',
+            change: function (e) {
+                var row = this.select();
+                var id = row.data("uid");
+                my.uId = id;
+            },
+            columns: [
+                {
+                    field: "Codigo", hidden: true
+                },
+                {
+                    field: 'Nome'
+                },
+                {
+                    command: [
+                        {
+                            name: 'update',
+                            text: '',
+                            click: function (e) {
+                                e.preventDefault();
+
+                                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+                                if (dataItem) {
+                                    var params = {
+                                        Codigo: dataItem.Codigo,
+                                        Nome: dataItem.Nome
+                                    }
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/dnn/desktopmodules/sgi/api/people/SaveSGIRegion',
+                                        data: params
+                                    }).done(function (response) {
+                                        if (response.Result.indexOf("success") !== -1) {
+                                            if (dataItem.Codigo > 0) {
+                                                var notice = new PNotify({
+                                                    title: 'Sucesso!',
+                                                    text: 'Região atualizada.',
+                                                    type: 'success',
+                                                    animation: 'none',
+                                                    addclass: 'stack-bottomright',
+                                                    stack: my.stack_bottomright
+                                                });
+                                                notice.get().click(function () {
+                                                    notice.remove();
+                                                });
+                                            } else {
+                                                var notice2 = new PNotify({
+                                                    title: 'Sucesso!',
+                                                    text: 'Nova região inserida.',
+                                                    type: 'success',
+                                                    animation: 'none',
+                                                    addclass: 'stack-bottomright',
+                                                    stack: my.stack_bottomright
+                                                });
+                                                notice2.get().click(function () {
+                                                    notice2.remove();
+                                                });
+                                            }
+
+                                            dataItem.set('Codigo', response.Region.Codigo);
+                                            dataItem.set('Nome', response.Region.Nome);
+                                            $('#regionsGrid').data('kendoGrid').refresh();
+
+                                        } else {
+                                            var notice3 = new PNotify({
+                                                title: 'Atenção!',
+                                                text: response.Result + '<br />' + response.Msg,
+                                                type: 'error',
+                                                animation: 'none',
+                                                addclass: 'stack-bottomright',
+                                                stack: my.stack_bottomright
+                                            });
+                                            notice3.get().click(function () {
+                                                notice3.remove();
+                                            });
+                                        }
+                                    }).fail(function (jqXHR, textStatus) {
+                                        console.log(jqXHR.responseText);
+                                        var notice4 = new PNotify({
+                                            title: 'Atenção!',
+                                            text: 'Erro ao tentar executar a ação.',
+                                            type: 'error',
+                                            animation: 'none',
+                                            addclass: 'stack-bottomright',
+                                            stack: my.stack_bottomright
+                                        });
+                                        notice4.get().click(function () {
+                                            notice4.remove();
+                                        });
+                                    });
+                                }
+                            }
+                        },
+                        {
+                            name: 'remove',
+                            text: '',
+                            class: '',
+                            imageClass: 'k-icon k-delete',
+                            click: function (e) {
+                                e.preventDefault();
+
+                                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+                                if (dataItem) {
+
+                                    swal({
+                                        title: 'Tem certeza?',
+                                        text: "Esta ação não poderá ser revertida!",
+                                        type: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "Sim, quero excluir!",
+                                        cancelButtonText: "Não, cancele!",
+                                        closeOnConfirm: true,
+                                        closeOnCancel: true
+                                    }).then(function (isConfirm) {
+                                        if (isConfirm) {
+
+                                            $.ajax({
+                                                type: 'DELETE',
+                                                url: '/dnn/desktopmodules/sgi/api/people/RemoveSGIRegion?regionId=' + dataItem.Codigo
+                                            }).done(function (data) {
+                                                if (data.Result.indexOf("success") !== -1) {
+                                                    var notice = new PNotify({
+                                                        title: 'Sucesso!',
+                                                        text: 'Região removida.',
+                                                        type: 'success',
+                                                        animation: 'none',
+                                                        addclass: 'stack-bottomright',
+                                                        stack: my.stack_bottomright
+                                                    });
+                                                    notice.get().click(function () {
+                                                        notice.remove();
+                                                    });
+                                                    $('#regionsGrid').data('kendoGrid').dataSource.remove(dataItem);
+                                                } else {
+                                                    var notice1 = new PNotify({
+                                                        title: 'Atenção!',
+                                                        text: (data.Result.indexOf('error') == 0 ? 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />' : '') + (data.Msg || data.Result),
+                                                        type: 'error',
+                                                        animation: 'none',
+                                                        addclass: 'stack-bottomright',
+                                                        stack: my.stack_bottomright
+                                                    });
+                                                    notice1.get().click(function () {
+                                                        notice1.remove();
+                                                    });
+                                                }
+                                            }).fail(function (jqXHR, textStatus) {
+                                                console.log(jqXHR.responseText);
+                                                var notice2 = new PNotify({
+                                                    title: 'Atenção!',
+                                                    text: 'Erro ao tentar executar a ação.',
+                                                    type: 'error',
+                                                    animation: 'none',
+                                                    addclass: 'stack-bottomright',
+                                                    stack: my.stack_bottomright
+                                                });
+                                                notice2.get().click(function () {
+                                                    notice2.remove();
+                                                });
+                                            });
+                                        } else {
+                                            var notice = new PNotify({
+                                                title: 'Cancelado!',
+                                                text: 'Região não excluida.',
+                                                type: 'warning',
+                                                animation: 'none',
+                                                addclass: 'stack-bottomright',
+                                                stack: my.stack_bottomright
+                                            });
+                                            notice.get().click(function () {
+                                                notice.remove();
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        },
+                    ],
+                    title: "&nbsp;",
+                    width: "80px"
+                }
+            ],
+            pageable: {
+                pageSizes: false,
+                info: false,
+                refresh: true,
+                numeric: true,
+                previousNext: true
+            }
+        });
+    });
+</script>
+</body>
+</html>

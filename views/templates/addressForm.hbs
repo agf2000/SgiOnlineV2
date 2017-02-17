@@ -1,0 +1,656 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}} </title>
+    {{!--<!-- Bootstrap -->
+    <link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="/vendors/animate.css/animate.min.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="/./vendors/select2/dist/css/select2.min.css" rel="stylesheet">--}}
+    <!-- Custom Theme Style -->
+    {{!--<link href="/build/css/custom.min.css" rel="stylesheet">--}}
+</head>
+
+<body class="login">
+    <form role="form" id="addressForm" class="form-horizontal" data-toggle="validator">
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">CEP:</label>
+            <div class="adrSearch col-xs-8">
+                <div class="input-group">
+                    <input id="txtBoxPostalCode" type="text" class="form-control" data-inputmask="'mask' : '99.999-999'" title="CEP" required>
+                    <span class="input-group-addon">
+                        <i id="btnPostalCode" class="glyphicon glyphicon-globe"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Tipo:</label>
+            <div class="col-xs-8">
+                <select id="select2AddressTypes" class="form-control" tabindex="-1" aria-hidden="true">
+                    <option selected value="RUA">RUA</option>
+                    <option value="AVENIDA">AVENIDA</option>
+                    <option value="PARQUE">PARQUE</option>
+                    <option value="BECO">BECO</option>
+                    <option value="QUADRA">QUADRA</option>
+                    <option value="TRAVESSA">TRAVESSA</option>
+                    <option value="RESIDÊNCIAL">RESIDÊNCIAL</option>
+                    <option value="PRAÇA">PRAÇA</option>
+                    <option value="RODOVIA">RODOVIA</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Logradouro:</label>
+            <div class="col-xs-8">
+                <input id="txtBoxStreet" type="text" class="form-control" placeholder="Logradouro" title="Logradouro" data-role="validate" data-content="Insira o nome da rua ou avenida." required>
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Bairro:</label>
+            <div class="col-xs-8">
+                <input id="txtBoxDistrict" type="text" class="form-control" placeholder="Bairro">
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">País:</label>
+            <div class="col-xs-8">
+                <input id="txtBoxCountries" type="text" class="form-control" placeholder="País">
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Cód. País:</label>
+            <div class="col-xs-8">
+                <input id="txtBoxCountryCode" type="text" placeholder="Código IBGE do País" class="form-control">
+            </div>
+        </div>
+
+        <!-- State input -->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Estado:</label>
+            <div class="col-xs-5">
+                <input id="txtBoxStates" type="text" placeholder="Estado" class="form-control">
+            </div>
+
+            <div class="col-xs-3">
+                <input id="txtBoxSigla" type="text" placeholder="sigla" class="form-control">
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Cidade:</label>
+            <div class="col-xs-8">
+                <input id="txtBoxCities" type="text" placeholder="Cidade" class="form-control">
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-xs-4 control-label" for="textinput">Cód. Cidade:</label>
+            <div class="col-xs-8">
+                <input id="txtBoxCityCode" type="text" placeholder="Código IBGE da Cidade" class="form-control">
+            </div>
+        </div>
+    </form>
+
+    {{!--<!-- jQuery -->
+    <script src="/./vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/./vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="/./vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/./vendors/nprogress/nprogress.js"></script>
+    <!-- jQuery Cookie -->
+    <script src="/./vendors/jquery.cookie/js.cookie.js"></script>
+    <!-- amplify -->
+    <script src="/./vendors/amplify/amplify.min.js"></script>
+    <!-- input mask -->
+    <script src="/./vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <!-- typeahead -->
+    <script src="/./vendors/typeahead/typeahead.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="/./vendors/select2/dist/js/select2.full.min.js"></script>
+    <script src="/./vendors/select2/dist/js/i18n/pt-BR.js"></script>
+    <!-- bootstrap validator -->
+    <script src="/./vendors/bootstrap-validator/dist/validator.min.js"></script>
+    <!-- utilities -->
+    <script src="/./js/app/utilities.js"></script>
+    <!-- Page -->
+    <script src="/./js/templates/addressForm.js"></script>--}}
+
+    <script>
+        'use strict';
+
+        $(function () {
+
+            $('#select2AddressTypes').select2({
+                minimumResultsForSearch: -1,
+                width: '100%'
+            });
+
+            $('#txtBoxPostalCode').inputmask({
+                "mask": "99999-999"
+            });
+
+            var cities = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace('nome'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/getCities/%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#txtBoxBirthPlace').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'cities',
+                    source: cities,
+                    limit: 11,
+                    display: 'nome',
+                    displayKey: 'nodigo',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se a cidade não existe! Uma nova cidade será cadastrada.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nome + '</p>';
+                    }
+                });
+
+            $('#txtBoxBirthPlace').bind('typeahead:select', function (ev, suggestion) {
+                my.birthPlaceId = suggestion.codigo;
+            });
+
+            $('#txtBoxCities').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'cities',
+                    source: cities,
+                    limit: 11,
+                    display: 'nome',
+                    displayKey: 'codigo',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se a cidade não existe! Uma nova cidade será cadastrada.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nome + '</p>';
+                    }
+                });
+
+            $('#txtBoxCities').bind('typeahead:select', function (ev, suggestion) {
+                my.cityId = suggestion.codigo;
+                my.cityIbge = suggestion.codigoibge;
+                $('#txtBoxCityCode').val(suggestion.codigoibge);
+            });
+
+            var streets = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/getAddresses?filter=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#txtBoxStreet').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'streets',
+                    source: streets,
+                    limit: 100,
+                    display: 'nome',
+                    displayKey: 'codigo',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se o logradouro não existe! Um novo será cadastrado.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nome + '</p>';
+                    }
+                });
+
+            $('#txtBoxStreet').bind('typeahead:select', function (ev, suggestion) {
+                my.streetId = suggestion.codigo;
+            });
+
+            var districts = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/GetDistricts/%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#txtBoxDistrict').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'districts',
+                    source: districts,
+                    limit: 100,
+                    display: 'nome',
+                    displayKey: 'codigo',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se o bairro não existe! Um novo será cadastrado.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nome + '</p>';
+                    }
+                });
+
+            $('#txtBoxDistrict').bind('typeahead:select', function (ev, suggestion) {
+                my.districtId = suggestion.codigo;
+            });
+
+            var states = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/getSGIStates/%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#txtBoxStates').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'states',
+                    source: states,
+                    limit: 100,
+                    display: 'nome',
+                    displayKey: 'sigla',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se o estado não existe! Um novo será cadastrado.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nome + '</p>';
+                    }
+                });
+
+            $('#txtBoxStates').bind('typeahead:select', function (ev, suggestion) {
+                my.stateId = suggestion.codigo;
+                my.stateIbge = suggestion.estadoibge;
+                $('#txtBoxSigla').val(suggestion.sigla);
+            });
+
+            var professions = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/getSGIProfessions/%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#txtBoxProf').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'professions',
+                    source: professions,
+                    limit: 100,
+                    display: 'nome',
+                    displayKey: 'codigo',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se a profissão não existe! Um novo será cadastrado.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nome + '</p>';
+                    }
+                });
+
+            $('#txtBoxPostalCode').bind('typeahead:select', function (ev, suggestion) {
+                my.birthPlaceId = suggestion.numero;
+            });
+
+            var countries = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/getCountries/%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#txtBoxCountries').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, {
+                    name: 'countries',
+                    source: countries,
+                    limit: 100,
+                    display: 'nomepais',
+                    displayKey: 'idpais',
+                    templates: {
+                        empty: '<div class="empty-message"><i> Se o país não existe! Um novo será cadastrado.</i></div>'
+                    },
+                    suggestion: function (data) {
+                        return '<p>' + data.nomepais + '</p>';
+                    }
+                });
+
+            $('#txtBoxCountries').bind('typeahead:select', function (ev, suggestion) {
+                my.countryId = suggestion.idpais;
+                my.countryIbge = suggestion.codigopais;
+                $('#txtBoxCountryCode').val(suggestion.codigopais);
+            });
+
+            $('#txtBoxPostalCode').on('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    $('#btnPostalCode').click();
+                }
+            });
+
+            $('#btnPostalCode').click(function (e) {
+                if (e.clientX === 0) {
+                    return false;
+                }
+                e.preventDefault();
+
+                var $this = $(this);
+
+                if ($('#txtBoxPostalCode').val().length > 0) {
+                    $this.removeClass('glyphicon-globe').addClass('fa fa-spinner');
+
+                    $.ajax({
+                        url: '/api/getAddress/' + $('#txtBoxPostalCode').val().replace(/[^\/\d]/g, '')
+                    }).done(function (data) {
+                        if (data.length) {
+                            var address = data[0];
+                            if (address.tipo_logradouro != '' || address.tipo_logradouro != null) {
+                                $('#select2AddressTypes').append($('<option value="' + address.codtipo_logradouro + '" selected>' + address.tipo_logradouro + '</option>'));
+                                $('#select2AddressTypes').trigger("change");
+                            } else {
+                                $('#select2AddressTypes').append($('<option selected>RUA</option>'));
+                            }
+
+                            $('#txtBoxStreet').val(address.logradouro);
+
+                            if (address.nompais != '') {
+                                $('#txtBoxCountries').val(address.nompais);
+                                my.countryId = address.idpais;
+                                my.countryIbge = address.codigopais;
+                            }
+
+                            $('#txtBoxStates').val(my.getStateName(address.estado));
+                            $('#txtBoxSigla').val(address.estado);
+                            my.stateIbge = address.codibgeuf;
+
+                            $('#txtBoxCities').val(address.cidade);
+                            $('#txtBoxCityCode').val(address.codibge);
+                            my.CityId = address.codcidade;
+                            my.cityIbge = address.codibge;
+
+                            $('#txtBoxDistrict').val(address.bairro);
+
+                            if (address.codigopais > 0) {
+                                $('#txtBoxCountryCode').val(address.codigopais);
+                            }
+
+                            my.streetId = address.codlogradouro;
+                            my.districtId = address.codbairro;
+                            my.addressId = address.codigo;
+                        } else {
+
+                            $.ajax({
+                                url: 'http://cep.republicavirtual.com.br/web_cep.php?cep=' + $('#txtBoxPostalCode').val().replace(/[^\/\d]/g, '') + '&formato=json'
+                            }).done(function (data2) {
+                                if (data2) {
+                                    $('#selectAddressTypes').text(data2.tipo_logradouro);
+                                    $('#txtBoxStreet').val(data2.logradouro);
+
+                                    $('#txtBoxStates').val(my.getStateName(data2.uf));
+                                    $('#txtBoxSigla').val(data2.uf);
+
+                                    $('#txtBoxDistrict').val(data2.bairro);
+
+                                    $('#txtBoxCities').val(data2.cidade);
+                                    $('#txtBoxCityCode').val(data2.ibge);
+                                } else {
+                                    var notice = new PNotify({
+                                        title: 'Atenção!',
+                                        text: 'Erro ao tentar buscar o CEP. O serivço opcional RP talvez não esteja disponível no momento.',
+                                        type: 'error',
+                                        addclass: 'stack-bottomright',
+                                        stack: my.stack_bottomright
+                                    });
+                                    notice.get().click(function () {
+                                        notice.remove();
+                                    });
+                                }
+                            }).fail(function (jqXHR, textStatus) {
+                                console.log(jqXHR.responseText);
+                                var notice1 = new PNotify({
+                                    title: 'Atenção!',
+                                    text: 'Erro ao tentar completar a ação.',
+                                    type: 'error',
+                                    animation: 'none',
+                                    addclass: 'stack-bottomright',
+                                    stack: my.stack_bottomright
+                                });
+                                notice1.get().click(function () {
+                                    notice1.remove();
+                                });
+                            });
+
+                            $.ajax({
+                                url: 'http://viacep.com.br/ws/' + $('#txtBoxPostalCode').val().replace(/[^\/\d]/g, '') + '/json/'
+                            }).done(function (data1) {
+                                if (!data1.erro) {
+                                    $('#txtBoxStreet').val(data1.logradouro);
+
+                                    $('#txtBoxStates').val(my.getStateName(data1.uf));
+                                    $('#txtBoxSigla').val(data1.uf);
+
+                                    $('#txtBoxDistrict').val(data1.bairro);
+
+                                    $('#txtBoxCities').val(data1.localidade);
+                                    $('#txtBoxCityCode').val(data1.ibge);
+                                    my.cityIbge = data1.ibge;
+                                } else {
+                                    var notice2 = new PNotify({
+                                        title: 'Atenção!',
+                                        text: 'Erro ao tentar buscar o CEP. O CEP não existe ou o serivço opcional ViaCEP talvez não esteja disponível no momento.',
+                                        type: 'error',
+                                        addclass: 'stack-bottomright',
+                                        stack: my.stack_bottomright
+                                    });
+                                    notice2.get().click(function () {
+                                        notice2.remove();
+                                    });
+                                }
+                            }).fail(function (jqXHR, textStatus) {
+                                console.log(jqXHR.responseText);
+                                var notice3 = new PNotify({
+                                    title: 'Atenção!',
+                                    text: 'Erro ao tentar completar a ação.',
+                                    type: 'error',
+                                    animation: 'none',
+                                    addclass: 'stack-bottomright',
+                                    stack: my.stack_bottomright
+                                });
+                                notice3.get().click(function () {
+                                    notice3.remove();
+                                });
+                            });
+                        }
+                    }).fail(function (jqXHR, textStatus) {
+                        console.log(jqXHR.responseText);
+                        var notice4 = new PNotify({
+                            title: 'Atenção!',
+                            text: 'Erro ao tentar completar a ação.',
+                            type: 'error',
+                            animation: 'none',
+                            addclass: 'stack-bottomright',
+                            stack: my.stack_bottomright
+                        });
+                        notice4.get().click(function () {
+                            notice4.remove();
+                        });
+                    }).always(function () {
+                        $this.removeClass('fa fa-spinner').addClass('glyphicon-globe');
+                    });
+                }
+            });
+
+            $('#btnSaveAddress').click(function (e) {
+                if (e.isDefaultPrevented()) {
+                } else {
+                    if (e.clientX === 0) {
+                        return false;
+                    }
+                    e.preventDefault();
+
+                    var params = {
+                        codigo: my.addressId,
+                        cep: $('#txtBoxPostalCode').val().replace(/[^\/\d]/g, ''),
+                        estado: $('#txtBoxStates').val(), // parseInt(my.stateId) > 0 ? my.stateId : null,
+                        sigla: $('#txtBoxSigla').val(),
+                        estadoibge: parseInt(my.stateIbge) > 0 ? my.stateIbge : null,
+                        logradouroCodigo: parseInt(my.streetId) > 0 ? my.streetId : null,
+                        logradouro: $('#txtBoxStreet').val(),
+                        bairroCodigo: parseInt(my.districtId) > 0 ? my.districtId : null,
+                        bairro: $('#txtBoxDistrict').val(),
+                        cidadeCodigo: parseInt(my.cityId) > 0 ? my.cityId : null,
+                        cidade: $('#txtBoxCities').val(),
+                        codIbge: $('#txtBoxCityCode').val(), // parseInt(my.cityIbge) > 0 ? my.cityIbge : null,
+                        codTipo_Logradouro: $('#select2AddressTypes option:selected').attr('value'),
+                        tipo_Logradouro: $('#select2AddressTypes').select2('data')[0].text,
+                        nomePais: $('#txtBoxCountries').val(),
+                        codigopais: $('#txtBoxCountryCode').val(),
+                        pessoa: my.clientId
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/saveAddress',
+                        data: params
+                    }).done(function (data) {
+                        if (!data.message) {
+                            var address = data[0][0];
+                            if (my.streetId == 0) {
+                                var notice = new PNotify({
+                                    title: 'Sucesso!',
+                                    text: 'Endereço inserido.',
+                                    type: 'sucess',
+                                    addclass: 'stack-bottomright',
+                                    stack: my.stack_bottomright
+                                });
+                                notice.get().click(function () {
+                                    notice.remove();
+                                });
+                            } else {
+                                var notice1 = new PNotify({
+                                    title: 'Sucesso!',
+                                    text: 'Endereço atualizado.',
+                                    type: 'success',
+                                    addclass: 'stack-bottomright',
+                                    stack: my.stack_bottomright
+                                });
+                                notice1.get().click(function () {
+                                    notice1.remove();
+                                });
+                            }
+
+                            my.addressId = address.codigo;
+
+                            $(my.txtBox).val(params.tipo_Logradouro + ' ' + params.logradouro + ', ' + params.cidade + ' / ' + params.estado);
+
+                            if (my.buttonValue == '1') {
+                                my.personAddressId = address.codigo;
+                            } else {
+                                my.workAddressId = address.codigo;
+                            }
+
+                            $('#txtBoxPostalCode').val(null);
+
+                            $('.bootstrap-dialog').modal('hide');
+                        } else {
+                            var notice2 = new PNotify({
+                                title: 'Atenção!',
+                                text: (data.message.indexOf('error') == 0 ? 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />' : '') + (data.Msg || data.Result),
+                                type: 'error',
+                                addclass: 'stack-bottomright',
+                                stack: my.stack_bottomright
+                            });
+                            notice2.get().click(function () {
+                                notice2.remove();
+                            });
+                        }
+
+                    }).fail(function (jqXHR, textStatus) {
+                        console.log(jqXHR.responseText);
+                        var notice3 = new PNotify({
+                            title: 'Atenção!',
+                            text: 'Erro ao tentar completar a ação.',
+                            type: 'error',
+                            animation: 'none',
+                            addclass: 'stack-bottomright',
+                            stack: my.stack_bottomright
+                        });
+                        notice3.get().click(function () {
+                            notice3.remove();
+                        });
+                    });
+                }
+            });
+
+            if (my.buttonValue == '1') {
+                if (my.clientZip != null) {
+                    window.setTimeout(function () {
+                        $('#txtBoxPostalCode').val(my.clientZip);
+                        $('#btnPostalCode').click();
+                    }, 500);
+                }
+            } else {
+                if (my.workAddressZip != null) {
+                    window.setTimeout(function () {
+                        $('#txtBoxPostalCode').val(my.workAddressZip);
+                        $('#btnPostalCode').click();
+                    }, 500);
+                }
+            }
+
+            $(":input").css({ 'text-transform': 'uppercase' }).inputmask();
+        });
+    </script>
+
+</body>
+
+</html>

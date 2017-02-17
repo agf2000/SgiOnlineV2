@@ -31,7 +31,7 @@ $(function () {
         width: '100%',
         language: "pt-BR",
         ajax: {
-            url: "/dnn/desktopmodules/sgi/api/people/GetSGIRegions",
+            url: "/api/getRegions",
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -43,10 +43,10 @@ $(function () {
 
                 var results = [];
 
-                $.each(data.data, function (i, v) {
+                $.each(data, function (i, v) {
                     var o = {};
                     o.id = v.codigo;
-                    o.name = v.Nome;
+                    o.name = v.nome;
                     //o.description = v.Descricao;
                     //o.value = v.codigo;
                     results.push(o);
@@ -77,7 +77,7 @@ $(function () {
         width: '100%',
         language: "pt-BR",
         ajax: {
-            url: "/dnn/desktopmodules/sgi/api/people/GetSGIClasses",
+            url: "/api/getClasses",
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -89,10 +89,10 @@ $(function () {
 
                 var results = [];
 
-                $.each(data.data, function (i, v) {
+                $.each(data, function (i, v) {
                     var o = {};
                     o.id = v.codigo;
-                    o.name = v.Nome;
+                    o.name = v.nome;
                     //o.description = v.Descricao;
                     //o.value = v.codigo;
                     results.push(o);
@@ -108,7 +108,7 @@ $(function () {
             return markup;
         },
         minimumInputLength: -1,
-        dropdownCssClass: 'bigdrop1',
+        // dropdownCssClass: 'bigdrop1',
         templateResult: function (repo) {
             if (repo.loading) return repo.text;
             var markup = '<option value="' + repo.id + '">' + repo.name + '</option>'
@@ -120,7 +120,8 @@ $(function () {
     });
 
     $('#select2Civil').select2({
-        minimumInputLength: -1
+        minimumResultsForSearch: -1,
+        width: '100%'
     });
 
     $('.btnSavePerson').click(function (e) {
@@ -148,7 +149,7 @@ $(function () {
                 complemento: $('#txtBoxComplement').val(),
                 complemento_Trabalho: $('#txtBoxWorkComplement').val(),
                 cpf_Cnpj: $('#txtBoxCpf_Cnpj').val(),
-                nascimento: $('#txtBoxBirthDate').val().length > 0 ? moment($('#txtBoxBirthDate').datepicker('getDate')).format() : null,
+                nascimento: $('#txtBoxBirthDate').val().length > 0 ? moment($('#txtBoxBirthDate').val()).format() : null,
                 email: $('#txtBoxEmail').val(),
                 fantasia: $('#txtBoxDisplayName').val(),
                 filiacao: $('#txtBoxParents').val(),
@@ -345,7 +346,7 @@ $(function () {
                 field: 'tipo',
                 title: "Tipo",
                 width: 120,
-                template: '#= my.getPhoneType(Tipo) #',
+                template: '#= my.getPhoneType(tipo) #',
                 editor: phoneTypeDropDownEditor
             },
             {
@@ -684,10 +685,10 @@ $(function () {
     });
 
     var birthLocales = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+        datumTokenizer: Bloodhound.tokenizers.whitespace('nome'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: '/dnn/desktopmodules/sgi/api/services/GetSGICities?filter=%QUERY',
+            url: '/api/getCities?filter=%QUERY',
             wildcard: '%QUERY'
         }
     });
@@ -700,7 +701,7 @@ $(function () {
         name: 'birthLocales',
         source: birthLocales,
         limit: 100,
-        display: 'Nome',
+        display: 'nome',
         displayKey: 'codigo',
         templates: {
             empty: '<div class="empty-message"><i> Se a cidade não existe! Uma nova será cadastrada.</i></div>'
@@ -715,10 +716,10 @@ $(function () {
     });
 
     var professions = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.whitespace('Nome'),
+        datumTokenizer: Bloodhound.tokenizers.whitespace('nome'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: '/dnn/desktopmodules/sgi/api/people/GetSGIProfessions?filter=%QUERY',
+            url: '/api/getProfessions/%QUERY',
             wildcard: '%QUERY'
         }
     });
@@ -731,13 +732,13 @@ $(function () {
         name: 'professions',
         source: professions,
         limit: 100,
-        display: 'Nome',
+        display: 'nome',
         displayKey: 'codigo',
         templates: {
             empty: '<div class="empty-message"><i> Se a profissão não existe! Uma nova será cadastrada.</i></div>'
         },
         suggestion: function (data) {
-            return '<p>' + data.Nome + '</p>';
+            return '<p>' + data.nome + '</p>';
         }
     });
 
@@ -747,9 +748,9 @@ $(function () {
 
     moment.locale('pt-BR');
 
-    var validator = new ValidationUtility();
-
-    // $(":input").inputmask();
+    $(":input").css({
+        'text-transform': 'uppercase'
+    }); // .inputmask();
 
     $('#txtBoxName').focus();
 
@@ -837,47 +838,47 @@ function validateCpf_Cnpj(elem) {
 
 var phoneTypes = [{
         'Tipo': 9,
-        'Nome': 'OUTROS'
+        'nome': 'OUTROS'
     },
     {
         'Tipo': 10,
-        'Nome': 'WHATSAPP'
+        'nome': 'WHATSAPP'
     },
     {
         'Tipo': 11,
-        'Nome': 'CONTATOS'
+        'nome': 'CONTATOS'
     },
     {
         'Tipo': 1,
-        'Nome': 'PRINCIPAL'
+        'nome': 'PRINCIPAL'
     },
     {
         'Tipo': 2,
-        'Nome': 'FAX'
+        'nome': 'FAX'
     },
     {
         'Tipo': 3,
-        'Nome': 'TRABALHO'
+        'nome': 'TRABALHO'
     },
     {
         'Tipo': 4,
-        'Nome': 'COBRANÇA'
+        'nome': 'COBRANÇA'
     },
     {
         'Tipo': 5,
-        'Nome': 'FAX TRABALHO'
+        'nome': 'FAX TRABALHO'
     },
     {
         'Tipo': 6,
-        'Nome': 'FAX COBRANÇA'
+        'nome': 'FAX COBRANÇA'
     },
     {
         'Tipo': 7,
-        'Nome': 'CELULAR'
+        'nome': 'CELULAR'
     },
     {
         'Tipo': 8,
-        'Nome': 'OUTRO'
+        'nome': 'OUTRO'
     }
 ]
 
@@ -953,7 +954,7 @@ function getClient(clientId) {
             $('#txtBoxDisplayName').val(client.fantasia);
             $('#txtBoxCpf_Cnpj').val(client.cpf_cnpj);
             if ((client.nascimento != null) && (moment(client.nascimento).format() > moment(new Date(1900, 1, 1)).format())) {
-                $('#txtBoxBirthDate').datepicker('setUTCDate', new Date(client.nascimento));
+                $('#txtBoxBirthDate').data('daterangepicker').setStartDate(new Date(client.nascimento));
             }
             $('#txtBoxRg_InscEst').val(client.rg_insc_est);
             $('#txtBoxNumber').val(client.numero);
@@ -976,7 +977,12 @@ function getClient(clientId) {
 
             //$('#telephonesGrid').show();
 
-            $.each(client.telefones, function (i, phone) {
+            // JSON.stringify(client.telefones).replace(/"([\w]+)":/g, function ($0, $1) {
+            //     return ('"' + $1.toLowerCase() + '":');
+            // });
+            var telephones = $.parseJSON(JSON.stringify(eval("(" + client.telefones + ")")));
+
+            $.each(telephones, function (i, phone) {
                 $('#telephonesGrid').data('kendoGrid').dataSource.add({
                     codigo: phone.codigo,
                     pessoa: phone.pessoa,
@@ -1076,7 +1082,7 @@ function getRegions() {
 
     BootstrapDialog.show({
         title: 'Regiões',
-        message: $('<div></div>').load('/templates/regionsForm.html'),
+        message: $('<div></div>').load('/templates/regionsForm'),
         buttons: [{
             label: 'Fechar',
             cssClass: 'btn-default btn-flat',
@@ -1105,7 +1111,7 @@ function getClasses() {
 
     BootstrapDialog.show({
         title: 'Classes',
-        message: $('<div></div>').load('/templates/classesForm.html'),
+        message: $('<div></div>').load('/templates/classesForm'),
         buttons: [{
             label: 'Fechar',
             cssClass: 'btn-default btn-flat',
@@ -1134,7 +1140,8 @@ function getAddressForm(e) {
 
     BootstrapDialog.show({
         title: 'Endereço Completo',
-        message: $('<div></div>').load('/templates/addressForm.html'),
+        message: $('<div></div>').load('/templates/addressForm'),
+        closable: false,
         buttons: [{
             label: 'Fechar',
             cssClass: 'btn-default btn-flat',

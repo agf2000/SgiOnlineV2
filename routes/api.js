@@ -1,6 +1,7 @@
 var express = require("express");
 var productsController = require("../controllers/productsController");
 var clientsController = require("../controllers/clientsController");
+var servicesController = require("../controllers/servicesController");
 
 var router = express.Router();
 
@@ -34,6 +35,30 @@ router.post('/validateUser', function (req, res) {
 
 router.get('/getTelephones/:clientId', function (req, res) {
 	clientsController.getTelephones(req, res, req.params.clientId);
+});
+
+router.get('/getAddress/:postalCode', function (req, res) {
+	servicesController.getAddress(req, res, req.params.postalCode);
+});
+
+router.get('/getCountries/:filter', function (req, res) {
+	servicesController.getCountries(req, res, req.params.filter);
+});
+
+router.get('/getClasses', function (req, res) {
+	servicesController.getClasses(req, res, (req.query.filter || "''"), (req.query.pageIndex || 1), (req.query.pageSize || 10));
+});
+
+router.get('/getRegions', function (req, res) {
+	servicesController.getRegions(req, res, (req.query.filter || "''"), (req.query.pageIndex || 1), (req.query.pageSize || 10));
+});
+
+router.get('/getProfessions/:filter', function (req, res) {
+	servicesController.getProfessions(req, res, req.params.filter);
+});
+
+router.post('/saveAddress', function (req, res) {
+	servicesController.saveAddress(req, res, req.body);
 });
 
 module.exports = router;
