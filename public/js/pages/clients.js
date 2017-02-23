@@ -46,22 +46,22 @@ $(function () {
                     $('.tbSearchFor input:first').val() + "'") : '';
             if ($('.tbSearchFor input:first').val().length > 0 && $('.tbSearchFor2 input:first').val().length > 0) {
                 strSearch = ' and ' + $('.selectSearchFor select:first option:selected').val() + ' ' +
-                                      $('.selectConditions select:first option:selected').val() + " '" +
-                                      $('.tbSearchFor input:first').val() + "' and '" + $('.tbSearchFor2 input:first').val() + "'";
+                    $('.selectConditions select:first option:selected').val() + " '" +
+                    $('.tbSearchFor input:first').val() + "' and '" + $('.tbSearchFor2 input:first').val() + "'";
             }
             if ($('.selectSearchFor select.cloned').length > 0) {
                 $.each($('.tbSearchFor input.cloned'), function (i, item) {
                     if ($('.tbSearchFor input.cloned')[i].value.length > 0 && $('.tbSearchFor2 input.cloned')[i].value.length > 0) {
                         strSearch += ($('input[type=checkbox].cloned').eq(i).is(':checked') ? ' and ' : ' or ') +
-                                     $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
-                                     $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
-                                     $('.tbSearchFor input.cloned')[i].value + "' and '" + $('.tbSearchFor2 input.cloned')[i].value + "'";
+                            $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
+                            $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
+                            $('.tbSearchFor input.cloned')[i].value + "' and '" + $('.tbSearchFor2 input.cloned')[i].value + "'";
                     } else if ($('.tbSearchFor input')[i].value.length > 0) {
                         strSearch += ($('input[type=checkbox].cloned').eq(i).is(':checked') ? ' and ' : ' or ') +
-                                      $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
-                                      $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
-                                      ($('.selectConditions select.cloned option:selected')[i].value == 'like' ? "%" +
-                                      $('.tbSearchFor input.cloned')[i].value + "%'" : $('.tbSearchFor input.cloned')[i].value + "'");
+                            $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
+                            $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
+                            ($('.selectConditions select.cloned option:selected')[i].value == 'like' ? "%" +
+                                $('.tbSearchFor input.cloned')[i].value + "%'" : $('.tbSearchFor input.cloned')[i].value + "'");
                     }
                 });
             }
@@ -82,23 +82,30 @@ $(function () {
         serverPaging: true,
         serverSorting: true,
         serverFiltering: true,
-        sort: { field: "codigo", dir: "desc" },
+        sort: {
+            field: "codigo",
+            dir: "desc"
+        },
         schema: {
             model: {
                 id: 'codigo',
                 fields: {
                     codigo: {
-                        editable: false, nullable: false
+                        editable: false,
+                        nullable: false
                     },
                     data_alteracao: {
-                        type: "date", format: "{0:MM/dd/yyyy}"
+                        type: "date",
+                        format: "{0:MM/dd/yyyy}"
                     },
                     data_cadastro: {
-                        type: "date", format: "{0:dd/MM/yyyy}"
+                        type: "date",
+                        format: "{0:dd/MM/yyyy}"
                     }
                 }
             },
-            total: 'total'
+            data: 'data',
+            total: 'recordsTotal'
         }
     });
 
@@ -113,39 +120,62 @@ $(function () {
             my.uId = id;
             var dataItem = this.dataItem(row);
             if (dataItem) {
-                $('#btnEditSelected').attr({ 'disabled': false });
-                $('#btnDeleteSelected').attr({ 'disabled': false });
+                $('#btnEditSelected').attr({
+                    'disabled': false
+                });
+                $('#btnDeleteSelected').attr({
+                    'disabled': false
+                });
             }
 
             if (my.admin || (dataItem.Cod_Funcionario == 0 || dataItem.Cod_Funcionario == my.userInfo.sgiid)) {
-                $('#btnDeleteSelected').attr({ 'disabled': false });
+                $('#btnDeleteSelected').attr({
+                    'disabled': false
+                });
             } else {
-                $('#btnDeleteSelected').attr({ 'disabled': true });
+                $('#btnDeleteSelected').attr({
+                    'disabled': true
+                });
             }
         },
         toolbar: kendo.template($("#tollbarTmpl").html()),
         navigatable: true,
-        columns: [
-            {
-                field: "codigo", title: "Cód.", width: 75, template: '#= my.padLeft(codigo, 6) #'
+        columns: [{
+                field: "codigo",
+                title: "Cód.",
+                width: 75,
+                template: '#= my.padLeft(codigo, 6) #'
             },
             {
-                field: "fantasia", title: "Fantasia", width: 200
+                field: "fantasia",
+                title: "Fantasia",
+                width: 200
             },
             {
-                field: "telefone", title: "Tel. Principal", width: 120
+                field: "telefone",
+                title: "Tel. Principal",
+                width: 120
             },
             {
-                field: "contato", title: "Contato", width: 100
+                field: "contato",
+                title: "Contato",
+                width: 100
             },
             {
-                field: "cpf_cnpj", title: "CPF/CNPJ", width: 130
+                field: "cpf_cnpj",
+                title: "CPF/CNPJ",
+                width: 130
             },
             {
-                field: "nome", title: "Razão Social", width: 200
+                field: "nome",
+                title: "Razão Social",
+                width: 200
             },
             {
-                field: "enderecocompleto", title: "Endereço", width: 450, sortable: false
+                field: "enderecocompleto",
+                title: "Endereço",
+                width: 450,
+                sortable: false
             }
         ],
         sortable: {
@@ -178,8 +208,12 @@ $(function () {
             }
         },
         dataBound: function () {
-            $('#btnEditSelected').attr({ 'disabled': true });
-            $('#btnDeleteSelected').attr({ 'disabled': true });
+            $('#btnEditSelected').attr({
+                'disabled': true
+            });
+            $('#btnDeleteSelected').attr({
+                'disabled': true
+            });
 
             var grid = this;
             grid.element.find('tbody tr:first').addClass('k-state-selected');
@@ -191,8 +225,12 @@ $(function () {
                 my.uId = id;
 
                 if (my.admin || (selectedItem.Cod_Funcionario == 0 || selectedItem.Cod_Funcionario == my.userInfo.sgiid)) {
-                    $('#btnEditSelected').attr({ 'disabled': false });
-                    $('#btnDeleteSelected').attr({ 'disabled': false });
+                    $('#btnEditSelected').attr({
+                        'disabled': false
+                    });
+                    $('#btnDeleteSelected').attr({
+                        'disabled': false
+                    });
                 }
             }
 
@@ -204,7 +242,7 @@ $(function () {
                     row.css({ 'display': 'none' });
                 }
             });*/
-            
+
             $('#spanDateDisplay').html(moment(my.today).format('DD/MM/YYYY'));
         },
         columnMenu: {
@@ -651,7 +689,9 @@ $(function () {
         $('.tbSearchFor2 input:first').clone().addClass('cloned').appendTo('.tbSearchFor2').parent().find("input:last").val('');
         $('.condition input:first').clone().addClass('cloned').appendTo('.filterButtons .form-group');
         $('.filterButtons input.cloned').bootstrapSwitch();
-        $('.filterButtons .bootstrap-switch-small:last').css({ 'margin-bottom': '10px' });
+        $('.filterButtons .bootstrap-switch-small:last').css({
+            'margin-bottom': '10px'
+        });
         $('.filterButtons .bootstrap-switch-small:last').addClass('cloned');
         $('#btnRemoveFilter').removeClass('hidden');
 
@@ -714,14 +754,14 @@ $(function () {
         }
         $('.selectSearchFor select')
             .append($("<option></option>")
-            .attr("value", value.field)
-            .text(value.title));
+                .attr("value", value.field)
+                .text(value.title));
     });
 
     $('.selectSearchFor select')
         .append($("<option></option>")
-        .attr("value", 'dbo.removehora(c.data_cadastro)')
-        .text('Data Cadastrado'));
+            .attr("value", 'dbo.removehora(c.data_cadastro)')
+            .text('Data Cadastrado'));
 
     // QuickTips();
 });
@@ -872,7 +912,9 @@ $(function () {
 };
 */
 var getNextDay = function () {
-    $(document).ajaxStart(function () { Pace.restart(); });
+    $(document).ajaxStart(function () {
+        Pace.restart();
+    });
     my.today.setDate(my.today.getDate() + 1);
     $('.selectSearchFor option[value="dbo.removehora(c.data_cadastro)"]').attr('selected', 'selected');
     $('.selectConditions option[value="between"]').attr('selected', 'selected');
@@ -883,7 +925,9 @@ var getNextDay = function () {
 };
 
 var getPrevDay = function () {
-    $(document).ajaxStart(function () { Pace.restart(); });
+    $(document).ajaxStart(function () {
+        Pace.restart();
+    });
     my.today.setDate(my.today.getDate() - 1);
     $('.selectSearchFor option[value="dbo.removehora(c.data_cadastro)"]').attr('selected', 'selected');
     $('.selectConditions option[value="between"]').attr('selected', 'selected');

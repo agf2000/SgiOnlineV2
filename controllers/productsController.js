@@ -28,6 +28,7 @@ exports.getProducts = function (req, res, orderBy, orderDir, pageIndex, pageSize
         "p.referência as referencia, p.promocaoAtivo, p.promocaoQtdeRestante, " +
         "totalrows = count(*) over() from view_produto p where 1 = 1 " + searchFor +
         ") a where a.rowid > ((" + pageIndex + " - 1) * " + pageSize + ")";
+    sqlInst += "select count(*) as recordstotal from produto where 1 = 1 " + searchFor;
 
     db.querySql(sqlInst,
         function (data, err) {
@@ -42,11 +43,14 @@ exports.getProducts = function (req, res, orderBy, orderDir, pageIndex, pageSize
                 res.writeHead(200, {
                     "Content-Type": "application/json"
                 });
-                res.write(JSON.stringify(data));
+
+                var result = { "recordsTotal": data[1][0].recordstotal, "data": data[0] };
+
+                res.write(JSON.stringify(result)); 
 
                 res.end();
             }
-        });
+        }, true);
 };
 
 exports.getProduct = function (req, res, id, orderBy, orderDir) {

@@ -66,4 +66,28 @@ router.post('/saveAddress', function (req, res) {
 	servicesController.saveAddress(req, res, req.body);
 });
 
+router.get('/getCities/:filter', function (req, res) {
+	servicesController.getCities(req, res, req.params.filter);
+});
+
+router.post('/saveClient', function (req, res) {
+	clientsController.addClient(req, res, req.body);
+});
+
+router.put('/saveClient', function (req, res) {
+	clientsController.updateClient(req, res, req.body);
+});
+
+router.post('/saveTelephone', function (req, res) {
+	servicesController.saveTelephone(req, res, req.body);
+});
+
+router.put('/saveTelephone', function (req, res) {
+	servicesController.updateTelephone(req, res, req.body);
+});
+
+router.delete('/removeTelephone/:id', function (req, res) {
+	servicesController.removeTelephone(req, res, req.params.id);
+});
+
 module.exports = router;

@@ -40,12 +40,13 @@ exports.executeSql = function (sql, params, callback) {
     });
 };
 
-exports.querySql = function (sql, callback) {
+exports.querySql = function (sql, callback, multiple) {
     var conn = new sqlDb.Connection(settings.dbConfig);
 
     conn.connect().then(function () {
 
         var req = new sqlDb.Request(conn);
+        req.multiple = multiple;
 
         req.query(sql).then(function (data) {
 

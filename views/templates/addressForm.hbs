@@ -555,6 +555,10 @@
                         pessoa: my.clientId
                     };
 
+                    if (my.buttonValue !== '1') {
+                        params.workAddressId = 1;
+                    }
+
                     $.ajax({
                         type: 'POST',
                         url: '/api/saveAddress',

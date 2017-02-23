@@ -3,10 +3,13 @@
 $(function () {
 
     PNotify.prototype.options.styling = "bootstrap3";
+    kendo.culture("pt-BR");
+    kendo.culture().calendar.firstDay = 1;
 
     my.clientId = document.location.pathname.split('/')[2]; // my.getQuerystring('codigo', my.getStringParameterByName('codigo'));
-    my.orderBy = my.getQuerystring('orderby', my.getStringParameterByName('orderby'));
-    my.orderDir = my.getQuerystring('orderdir', my.getStringParameterByName('orderdir'));
+    // my.orderBy = my.getQuerystring('orderby', my.getStringParameterByName('orderby'));
+    // my.orderDir = my.getQuerystring('orderdir', my.getStringParameterByName('orderdir'));
+    my.userInfo = JSON.parse(Cookies.getJSON('SGIUser').replace('j:', ''));
 
     /*function rotation() {
         $('.logo-mini').transform({ rotateY: '0' });
@@ -16,10 +19,8 @@ $(function () {
     }
     rotation();*/
 
-    /*$.fn.datepicker.defaults.format = "dd/mm/yyyy";
-    $('#txtBoxBirthDate').datepicker();*/
-
     $('#txtBoxBirthDate').daterangepicker({
+        autoUpdateInput: false,
         singleDatePicker: true,
         calender_style: "picker_4"
     }, function (start, end, label) {
@@ -168,16 +169,68 @@ $(function () {
         }
     });
 
-    $('.btnSavePerson').click(function (e) {
-        if (e.clientX === 0) {
-            return false;
-        }
-        e.preventDefault();
+    $('#clientForm')
+        .bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                txtBoxName: {
+                    message: 'Nome é obrigatório',
+                    validators: {
+                        notEmpty: {
+                            message: 'Nome é obrigatório'
+                        },
+                        // stringLength: {
+                        //     min: 6,
+                        //     max: 30,
+                        //     message: 'The username must be more than 6 and less than 30 characters long'
+                        // },
+                        /*remote: {
+                            url: 'remote.php',
+                            message: 'The username is not available'
+                        },*/
+                        // regexp: {
+                        //     regexp: /^[a-zA-Z0-9_\.]+$/,
+                        //     message: 'The username can only consist of alphabetical, number, dot and underscore'
+                        // }
+                    }
+                },
+                personType: {
+                    feedbackIcons: 'false',
+                    validators: {
+                        notEmpty: {
+                            message: 'Trata-se de uma pessoa física ou jurídica?'
+                        }
+                    }
+                },
+            }
+        })
+        .on('status.field.bv', function (e, data) {
+            var $form = $(e.target),
+                validator = data.bv,
+                $tabPane = data.element.parents('.tab-pane'),
+                tabId = $tabPane.attr('id');
 
-        var $this = $(this);
+            if (tabId) {
+                var $icon = $('a[href="#' + tabId + '"][data-toggle="tab"]').parent().find('i');
 
-        if (validator.validate('#clientForm')) {
-            $this.html("Um momento...").prop('disabled', true);
+                // Add custom class to tab containing the field
+                if (data.status == validator.STATUS_INVALID) {
+                    $icon.removeClass('fa-check').addClass('fa-times');
+                } else if (data.status == validator.STATUS_VALID) {
+                    var isValidTab = validator.isValidContainer($tabPane);
+                    $icon.removeClass('fa-check fa-times')
+                        .addClass(isValidTab ? 'fa-check' : 'fa-times');
+                }
+            }
+        })
+        .on('success.form.bv', function (e) {
+            e.preventDefault();
+            $('#btnSavePerson').html("Um momento...").prop('disabled', true);
 
             var params = {
                 ativo: $('#chkBoxActive').is(':checked'),
@@ -193,7 +246,7 @@ $(function () {
                 complemento: $('#txtBoxComplement').val(),
                 complemento_Trabalho: $('#txtBoxWorkComplement').val(),
                 cpf_Cnpj: $('#txtBoxCpf_Cnpj').val(),
-                nascimento: $('#txtBoxBirthDate').val().length > 0 ? moment($('#txtBoxBirthDate').val()).format() : null,
+                nascimento: ($('#txtBoxBirthDate').val().length > 0 ? moment($('#txtBoxBirthDate').val()).format() : ''),
                 email: $('#txtBoxEmail').val(),
                 fantasia: $('#txtBoxDisplayName').val(),
                 filiacao: $('#txtBoxParents').val(),
@@ -207,22 +260,22 @@ $(function () {
                 observacao: $('#textAreaComments').val(),
                 codigo: my.clientId,
                 rg_Insc_Est: $('#txtBoxRg_InscEst').val(),
-                sexo: $('input[name=person]:checked').val(),
+                sexo: $('input[name=person]:checked').val() ? $('input[name=person]:checked').val() : 'M',
                 telefone: $('#txtBoxTelephone').val(),
                 contato: $('#txtBoxContact').val(),
-                cod_Funcionario: my.userInfo.userid
+                cod_Funcionario: my.userInfo.sgiid
             }
 
             $.ajax({
-                type: 'POST',
+                type: (my.clientId > 0 ? 'PUT' : 'POST'),
                 url: '/api/saveClient',
                 data: params
             }).done(function (data) {
-                if (data.Result.indexOf("success") !== -1) {
+                if (!data.message) {
                     if (my.clientId > 0) {
                         var notice = new PNotify({
                             title: 'Sucesso!',
-                            text: 'Cliente atualizado.',
+                            text: 'Cliente ' + my.clientId + ' atualizado.',
                             type: 'success',
                             animation: 'none',
                             addclass: 'stack-bottomright',
@@ -232,10 +285,14 @@ $(function () {
                             notice.remove();
                         });
                     } else {
-                        $('.box-title').html(($('#txtBoxDisplayName').val().length > 0 ? $('#txtBoxDisplayName').val() : $('#txtBoxName').val()) + ' (' + data.Client.codigo + ')').css('text-transform', 'uppercase');
+                        $('.x_title').html(($('#txtBoxDisplayName').val().length > 0 ? $('#txtBoxDisplayName').val() : $('#txtBoxName').val()) + ' (' + data.codigo + ')').css('text-transform', 'uppercase');
+                        if ($('#txtBoxDisplayName').val().length === 0) {
+                            $('#txtBoxDisplayName').val($('#txtBoxName').val());
+                        }
+
                         var notice1 = new PNotify({
                             title: 'Sucesso!',
-                            text: 'Cliente inserido.',
+                            text: 'Cliente inserido (' + data.codigo + ').',
                             type: 'success',
                             animation: 'none',
                             addclass: 'stack-bottomright',
@@ -244,9 +301,13 @@ $(function () {
                         notice1.get().click(function () {
                             notice1.remove();
                         });
-                        history.pushState("", document.title, window.location.pathname);
-                        window.location = document.location + '/' + data.Client.codigo + '/codigo/desc';
-                        my.clientId = data.Client.codigo;
+
+                        history.replaceState("", document.title, data.codigo);
+                        // window.location = document.location + '/' + data.codigo + '/codigo/desc';
+                        my.clientId = data.codigo;
+                        $('#liTab').css({
+                            'display': 'block'
+                        });
                         $('#txtBoxTelephone').prop('readonly', true);
                         $('#txtBoxContact').prop('readonly', true);
 
@@ -254,7 +315,7 @@ $(function () {
                             var ds = new kendo.data.DataSource({
                                 transport: {
                                     read: {
-                                        url: '/api/getTelephones/' + data.Client.codigo
+                                        url: '/api/getTelephones/' + data.codigo
                                     }
                                 },
                                 schema: {
@@ -306,7 +367,7 @@ $(function () {
                 } else {
                     var notice2 = new PNotify({
                         title: 'Atenção!',
-                        text: (data.Result.indexOf('error') == 0 ? 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />' : '') + (dataMsg || data.Result),
+                        text: (data.message ? 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />' : '') + data.message,
                         type: 'error',
                         animation: 'none',
                         addclass: 'stack-bottomright',
@@ -316,7 +377,7 @@ $(function () {
                         notice2.remove();
                     });
                 }
-                $this.html('Salvar').prop('disabled', false);
+                $('#btnSavePerson').html('Salvar').prop('disabled', false);
             }).fail(function (jqXHR, textStatus) {
                 console.log(jqXHR.responseText);
                 var notice3 = new PNotify({
@@ -330,10 +391,9 @@ $(function () {
                 notice3.get().click(function () {
                     notice3.remove();
                 });
-                $this.html('Salvar').prop('disabled', false);
+                $('#btnSavePerson').html('Salvar').prop('disabled', false);
             });
-        }
-    });
+        });
 
     $('#telephonesGrid').kendoGrid({
         dataSource: new kendo.data.DataSource({
@@ -430,18 +490,18 @@ $(function () {
                                 var params = {
                                     codigo: dataItem.codigo,
                                     pessoa: dataItem.pessoa || my.clientId,
-                                    tipo: typeof (dataItem.tipo) == 'number' ? dataItem.tipo : dataItem.tipo.tipo,
+                                    tipo: (!isNaN(dataItem.tipo) ? dataItem.tipo : dataItem.tipo.tipo),
                                     telefone: dataItem.telefone,
                                     contato: dataItem.contato,
                                     padrao: $(e.currentTarget).closest("tr").find('.chkbx').is(':checked')
                                 }
 
                                 $.ajax({
-                                    type: 'POST',
+                                    type: (dataItem.codigo > 0 ? 'PUT' : 'POST'),
                                     url: '/api/saveTelephone',
                                     data: params
                                 }).done(function (response) {
-                                    if (response.Result.indexOf("success") !== -1) {
+                                    if (!response.message) {
 
                                         var notice = new PNotify({
                                             title: 'Sucesso!',
@@ -455,18 +515,18 @@ $(function () {
                                             notice.remove();
                                         });
 
-                                        dataItem.set('codigo', response.data.codigo);
-                                        dataItem.set('pessoa', response.data.pessoa);
-                                        dataItem.set('tipo', response.data.tipo);
-                                        dataItem.set('telefone', response.data.telefone);
-                                        dataItem.set('contato', response.data.contato);
-                                        dataItem.set('padrao', $(e.currentTarget).closest("tr").find('.chkbx').is(':checked'));
-                                        $('#telephonesGrid').data('kendoGrid').refresh();
+                                        dataItem.set('codigo', response.codigo);
+                                        // dataItem.set('pessoa', params.pessoa);
+                                        // dataItem.set('tipo', params.tipo);
+                                        // dataItem.set('telefone', params.telefone);
+                                        // dataItem.set('contato', params.contato);
+                                        // dataItem.set('padrao', JSON.parse(params.padrao)); // $(e.currentTarget).closest("tr").find('.chkbx').is(':checked'));
+                                        // $('#telephonesGrid').data('kendoGrid').refresh();
 
                                     } else {
                                         var notice1 = new PNotify({
                                             title: 'Atenção!',
-                                            text: response.Result + '<br /> Mais informações no log do navegador.',
+                                            text: response.message + '<br /> Mais informações no log do navegador.',
                                             type: 'error',
                                             animation: 'none',
                                             addclass: 'stack-bottomright',
@@ -511,58 +571,71 @@ $(function () {
                                     showCancelButton: true,
                                     confirmButtonColor: "#DD6B55",
                                     confirmButtonText: "Sim, quero excluir!",
-                                    cancelButtonText: "Não, cancele!",
-                                    closeOnConfirm: true,
-                                    closeOnCancel: true
+                                    cancelButtonText: "Não, cancele!"
                                 }).then(function (isConfirm) {
                                     if (isConfirm) {
 
-                                        $.ajax({
-                                            type: 'DELETE',
-                                            url: '/api/removeTelephone/' + dataItem.codigo
-                                        }).done(function (data) {
-                                            if (data.Result.indexOf("success") !== -1) {
-                                                var notice = new PNotify({
-                                                    title: 'Sucesso!',
-                                                    text: 'Telefone removido.',
-                                                    type: 'success',
-                                                    animation: 'none',
-                                                    addclass: 'stack-bottomright',
-                                                    stack: my.stack_bottomright
-                                                });
-                                                notice.get().click(function () {
-                                                    notice.remove();
-                                                });
-                                                $('#telephonesGrid').data('kendoGrid').dataSource.remove(dataItem);
+                                        var gridDataSource = $("#telephonesGrid").data("kendoGrid").dataSource;
+                                        //records on current view / page   
+                                        var recordsOnCurrentView = gridDataSource.view().length;
+                                        //total records
+                                        var totalRecords = gridDataSource.total();
 
-                                                $('#telephonesGrid').data('kendoGrid').dataSource.data()[0].set('Padrao', true);
-                                            } else {
-                                                var notice2 = new PNotify({
+                                        if (totalRecords > 1 && JSON.parse(dataItem.padrao)) {
+                                            swal(
+                                                'Erro',
+                                                'Não se pode excluir o telefone padrão.',
+                                                'warning'
+                                            )
+                                        } else {
+
+                                            $.ajax({
+                                                type: 'DELETE',
+                                                url: '/api/removeTelephone/' + dataItem.codigo
+                                            }).done(function (data) {
+                                                if (!data.message) {
+                                                    var notice = new PNotify({
+                                                        title: 'Sucesso!',
+                                                        text: 'Telefone removido.',
+                                                        type: 'success',
+                                                        animation: 'none',
+                                                        addclass: 'stack-bottomright',
+                                                        stack: my.stack_bottomright
+                                                    });
+                                                    notice.get().click(function () {
+                                                        notice.remove();
+                                                    });
+                                                    $('#telephonesGrid').data('kendoGrid').dataSource.remove(dataItem);
+
+                                                    // $('#telephonesGrid').data('kendoGrid').dataSource.data()[0].set('Padrao', true);
+                                                } else {
+                                                    var notice2 = new PNotify({
+                                                        title: 'Atenção!',
+                                                        text: (data.message ? 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />' : '') + (data.message),
+                                                        type: 'error',
+                                                        animation: 'none',
+                                                        addclass: 'stack-bottomright',
+                                                        stack: my.stack_bottomright
+                                                    });
+                                                    notice2.get().click(function () {
+                                                        notice2.remove();
+                                                    });
+                                                }
+                                            }).fail(function (jqXHR, textStatus) {
+                                                console.log(jqXHR.responseText);
+                                                var notice3 = new PNotify({
                                                     title: 'Atenção!',
-                                                    text: (data.Result.indexOf('error') == 0 ? 'Um erro imprevisto ocorreu. Caso este erro persista, contate o administrador do sistema.<br /><br />' : '') + (data.Msg || data.Result),
+                                                    text: 'Erro ao tentar executar a ação.',
                                                     type: 'error',
                                                     animation: 'none',
                                                     addclass: 'stack-bottomright',
                                                     stack: my.stack_bottomright
                                                 });
-                                                notice2.get().click(function () {
-                                                    notice2.remove();
+                                                notice3.get().click(function () {
+                                                    notice3.remove();
                                                 });
-                                            }
-                                        }).fail(function (jqXHR, textStatus) {
-                                            console.log(jqXHR.responseText);
-                                            var notice3 = new PNotify({
-                                                title: 'Atenção!',
-                                                text: 'Erro ao tentar executar a ação.',
-                                                type: 'error',
-                                                animation: 'none',
-                                                addclass: 'stack-bottomright',
-                                                stack: my.stack_bottomright
                                             });
-                                            notice3.get().click(function () {
-                                                notice3.remove();
-                                            });
-                                        });
+                                        }
                                     } else {
                                         var notice4 = new PNotify({
                                             title: 'Cancelado!',
@@ -589,79 +662,80 @@ $(function () {
 
     $('#telephonesGrid').data('kendoGrid').tbody.on("change", ".chkbx", function (e) {
 
+        var initialStage = $(this).is(':checked');
         $('.chkbx').prop('checked', false);
 
         var $chk = $(this),
             grid = $('#telephonesGrid').data().kendoGrid,
             dataItem = grid.dataItem($(e.target).closest('tr'));
 
-        $chk.prop('checked', true);
+        if (initialStage) dataItem.set('padrao', true);
 
-        if (dataItem) {
-            var params = {
-                codigo: dataItem.codigo,
-                pessoa: dataItem.pessoa || my.clientId,
-                tipo: typeof (dataItem.tipo) == 'number' ? dataItem.tipo : dataItem.tipo.tipo,
-                telefone: dataItem.telefone,
-                contato: dataItem.contato,
-                padrao: $chk.is(':checked')
-            }
+        // if (dataItem) {
+        //     var params = {
+        //         codigo: dataItem.codigo,
+        //         pessoa: dataItem.pessoa || my.clientId,
+        //         tipo: typeof (dataItem.tipo) == 'number' ? dataItem.tipo : dataItem.tipo.tipo,
+        //         telefone: dataItem.telefone,
+        //         contato: dataItem.contato,
+        //         padrao: $chk.is(':checked')
+        //     }
 
-            $.ajax({
-                type: 'POST',
-                url: '/api/saveTelephone',
-                data: params
-            }).done(function (response) {
-                if (response.Result.indexOf("success") !== -1) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/api/saveTelephone',
+        //         data: params
+        //     }).done(function (response) {
+        //         if (response.Result.indexOf("success") !== -1) {
 
-                    var notice = new PNotify({
-                        title: 'Sucesso!',
-                        text: 'Telefone atualizado.',
-                        type: 'success',
-                        animation: 'none',
-                        addclass: 'stack-bottomright',
-                        stack: my.stack_bottomright
-                    });
-                    notice.get().click(function () {
-                        notice.remove();
-                    });
+        //             var notice = new PNotify({
+        //                 title: 'Sucesso!',
+        //                 text: 'Telefone atualizado.',
+        //                 type: 'success',
+        //                 animation: 'none',
+        //                 addclass: 'stack-bottomright',
+        //                 stack: my.stack_bottomright
+        //             });
+        //             notice.get().click(function () {
+        //                 notice.remove();
+        //             });
 
-                    //dataItem.set('codigo', response.data.codigo);
-                    //dataItem.set('Pessoa', response.data.Pessoa);
-                    //dataItem.set('Tipo', response.data.Tipo);
-                    //dataItem.set('Telefone', response.data.Telefone);
-                    //dataItem.set('Contato', response.data.Contato);
-                    //dataItem.set('Padrao', $chk.is(':checked'));
-                    //$('#telephonesGrid').data('kendoGrid').dataSource.read();
+        //             //dataItem.set('codigo', response.data.codigo);
+        //             //dataItem.set('Pessoa', response.data.Pessoa);
+        //             //dataItem.set('Tipo', response.data.Tipo);
+        //             //dataItem.set('Telefone', response.data.Telefone);
+        //             //dataItem.set('Contato', response.data.Contato);
+        //             //dataItem.set('Padrao', $chk.is(':checked'));
+        //             //$('#telephonesGrid').data('kendoGrid').dataSource.read();
 
-                } else {
-                    var notice1 = new PNotify({
-                        title: 'Atenção!',
-                        text: response.Result + '<br /> Mais informações no log do navegador.',
-                        type: 'error',
-                        animation: 'none',
-                        addclass: 'stack-bottomright',
-                        stack: my.stack_bottomright
-                    });
-                    notice1.get().click(function () {
-                        notice1.remove();
-                    });
-                }
-            }).fail(function (jqXHR, textStatus) {
-                console.log(jqXHR.responseText);
-                var notice2 = new PNotify({
-                    title: 'Atenção!',
-                    text: 'Erro ao tentar executar a ação.',
-                    type: 'error',
-                    animation: 'none',
-                    addclass: 'stack-bottomright',
-                    stack: my.stack_bottomright
-                });
-                notice2.get().click(function () {
-                    notice2.remove();
-                });
-            });
-        }
+        //         } else {
+        //             var notice1 = new PNotify({
+        //                 title: 'Atenção!',
+        //                 text: response.Result + '<br /> Mais informações no log do navegador.',
+        //                 type: 'error',
+        //                 animation: 'none',
+        //                 addclass: 'stack-bottomright',
+        //                 stack: my.stack_bottomright
+        //             });
+        //             notice1.get().click(function () {
+        //                 notice1.remove();
+        //             });
+        //         }
+        //     }).fail(function (jqXHR, textStatus) {
+        //         console.log(jqXHR.responseText);
+        //         var notice2 = new PNotify({
+        //             title: 'Atenção!',
+        //             text: 'Erro ao tentar executar a ação.',
+        //             type: 'error',
+        //             animation: 'none',
+        //             addclass: 'stack-bottomright',
+        //             stack: my.stack_bottomright
+        //         });
+        //         notice2.get().click(function () {
+        //             notice2.remove();
+        //         });
+        //     });
+        // }
     });
 
     $("#telephonesGrid").on("click", ".k-grid-edit", function () {
@@ -732,7 +806,7 @@ $(function () {
         datumTokenizer: Bloodhound.tokenizers.whitespace('nome'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: '/api/getCities?filter=%QUERY',
+            url: '/api/getCities/%QUERY',
             wildcard: '%QUERY'
         }
     });
@@ -828,7 +902,7 @@ $(function () {
         $(this).val($(this).val().toUpperCase());
     });
 
-    if (my.clientId) {
+    if (!isNaN(my.clientId)) {
         getClient(my.clientId);
     }
 
@@ -881,57 +955,57 @@ function validateCpf_Cnpj(elem) {
 };
 
 var phoneTypes = [{
-        'Tipo': 9,
+        'tipo': 9,
         'nome': 'OUTROS'
     },
     {
-        'Tipo': 10,
+        'tipo': 10,
         'nome': 'WHATSAPP'
     },
     {
-        'Tipo': 11,
+        'tipo': 11,
         'nome': 'CONTATOS'
     },
     {
-        'Tipo': 1,
+        'tipo': 1,
         'nome': 'PRINCIPAL'
     },
     {
-        'Tipo': 2,
+        'tipo': 2,
         'nome': 'FAX'
     },
     {
-        'Tipo': 3,
+        'tipo': 3,
         'nome': 'TRABALHO'
     },
     {
-        'Tipo': 4,
+        'tipo': 4,
         'nome': 'COBRANÇA'
     },
     {
-        'Tipo': 5,
+        'tipo': 5,
         'nome': 'FAX TRABALHO'
     },
     {
-        'Tipo': 6,
+        'tipo': 6,
         'nome': 'FAX COBRANÇA'
     },
     {
-        'Tipo': 7,
+        'tipo': 7,
         'nome': 'CELULAR'
     },
     {
-        'Tipo': 8,
+        'tipo': 8,
         'nome': 'OUTRO'
     }
 ]
 
 function phoneTypeDropDownEditor(container, options) {
-    $('<input required data-text-field="Nome" data-value-field="Tipo" data-bind="value:' + options.field + '"/>')
+    $('<input required data-text-field="nome" data-value-field="tipo" data-bind="value:' + options.field + '"/>')
         .appendTo(container)
         .kendoDropDownList({
-            dataTextField: "Nome",
-            dataValueField: "Tipo",
+            dataTextField: "nome",
+            dataValueField: "tipo",
             dataSource: phoneTypes
         });
 }
@@ -947,7 +1021,7 @@ function getTypes(type) {
 function getClient(clientId) {
 
     $.ajax({
-        url: '/api/getClient?id=' + clientId + '&orderBy=' + my.orderBy + '&orderDir=' + my.orderDir
+        url: '/api/getClient?id=' + clientId // + '&orderBy=' + my.orderBy + '&orderDir=' + my.orderDir
     }).done(function (data) {
         if (data) {
             var client = data[0];
@@ -986,6 +1060,8 @@ function getClient(clientId) {
                 $("label[for='txtBoxInscMun']").removeClass('hidden');
                 $("#txtBoxInscMun").removeClass('hidden');
             }
+
+            $('.x_title').html(client.fantasia + ' (' + client.codigo + ')').css('text-transform', 'uppercase');
 
             $('#txtBoxInscMun').val(client.insc_mun);
             $('#txtBoxTelephone').val(client.telefone);
@@ -1030,11 +1106,11 @@ function getClient(clientId) {
                 $('#telephonesGrid').data('kendoGrid').dataSource.add({
                     codigo: phone.codigo,
                     pessoa: phone.pessoa,
-                    tipo: phone.tipo,
+                    tipo: parseInt(phone.tipo),
                     telefone: phone.telefone,
                     contato: phone.contato,
                     nascimento: phone.nascimento,
-                    padrao: phone.padrao
+                    padrao: JSON.parse(phone.padrao)
                 });
             });
 

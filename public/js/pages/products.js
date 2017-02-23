@@ -48,22 +48,22 @@ $(function () {
                     $('.tbSearchFor input:first').val() + "'") : '';
             if ($('.tbSearchFor input:first').val().length > 0 && $('.tbSearchFor2 input:first').val().length > 0) {
                 strSearch = ' and ' + $('.selectSearchFor select:first option:selected').val() + ' ' +
-                                      $('.selectConditions select:first option:selected').val() + " '" +
-                                      $('.tbSearchFor input:first').val() + "' and '" + $('.tbSearchFor2 input:first').val() + "'";
+                    $('.selectConditions select:first option:selected').val() + " '" +
+                    $('.tbSearchFor input:first').val() + "' and '" + $('.tbSearchFor2 input:first').val() + "'";
             }
             if ($('.selectSearchFor select.cloned').length > 0) {
                 $.each($('.tbSearchFor input.cloned'), function (i, item) {
                     if ($('.tbSearchFor input.cloned')[i].value.length > 0 && $('.tbSearchFor2 input.cloned')[i].value.length > 0) {
                         strSearch += ($('input[type=checkbox].cloned').eq(i).is(':checked') ? ' and ' : ' or ') +
-                                     $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
-                                     $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
-                                     $('.tbSearchFor input.cloned')[i].value + "' and '" + $('.tbSearchFor2 input.cloned')[i].value + "'";
+                            $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
+                            $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
+                            $('.tbSearchFor input.cloned')[i].value + "' and '" + $('.tbSearchFor2 input.cloned')[i].value + "'";
                     } else if ($('.tbSearchFor input')[i].value.length > 0) {
                         strSearch += ($('input[type=checkbox].cloned').eq(i).is(':checked') ? ' and ' : ' or ') +
-                                      $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
-                                      $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
-                                      ($('.selectConditions select.cloned option:selected')[i].value == 'like' ? "%" +
-                                      $('.tbSearchFor input.cloned')[i].value + "%'" : $('.tbSearchFor input.cloned')[i].value + "'");
+                            $('.selectSearchFor select.cloned option:selected')[i].value + ' ' +
+                            $('.selectConditions select.cloned option:selected')[i].value + ' ' + "'" +
+                            ($('.selectConditions select.cloned option:selected')[i].value == 'like' ? "%" +
+                                $('.tbSearchFor input.cloned')[i].value + "%'" : $('.tbSearchFor input.cloned')[i].value + "'");
                     }
                 });
             }
@@ -96,23 +96,30 @@ $(function () {
         serverPaging: true,
         serverSorting: true,
         serverFiltering: true,
-        sort: { field: "Codigo", dir: "DESC" },
+        sort: {
+            field: "Codigo",
+            dir: "DESC"
+        },
         schema: {
             model: {
                 id: 'Codigo',
                 fields: {
                     Codigo: {
-                        editable: false, nullable: false
+                        editable: false,
+                        nullable: false
                     },
                     DATA_ALTERACAO: {
-                        type: "date", format: "{0:MM/dd/yyyy}"
+                        type: "date",
+                        format: "{0:MM/dd/yyyy}"
                     },
                     DATA_CADASTRO: {
-                        type: "date", format: "{0:dd/MM/yyyy}"
+                        type: "date",
+                        format: "{0:dd/MM/yyyy}"
                     }
                 }
             },
-            total: 'total'
+            data: 'data',
+            total: 'recordsTotal'
         }
     });
 
@@ -145,36 +152,100 @@ $(function () {
         },
         //toolbar: kendo.template($("#tmplToolbar").html()),
         navigatable: true,
-        columns: [
-            {
-                field: "codigo", title: "Código", width: 75, template: '#= my.padLeft(codigo, 6) #', attributes: { 'tag': "1" }
+        columns: [{
+                field: "codigo",
+                title: "Código",
+                width: 75,
+                template: '#= my.padLeft(codigo, 6) #',
+                attributes: {
+                    'tag': "1"
+                }
             },
             {
-                field: "nome", title: "Descrição", width: 350, template: '<a href="/produtos/#= codigo #/' + orderBy + '/' + orderDir + '" target="_blank">#= nome #</a>', attributes: { 'tag': "1" }
+                field: "nome",
+                title: "Descrição",
+                width: 350,
+                template: '<a href="/produtos/#= codigo #/' + orderBy + '/' + orderDir + '" target="_blank">#= nome #</a>',
+                attributes: {
+                    'tag': "1"
+                }
             },
             {
-                field: "nomeUnidade", title: "Unidade", width: 90, sortable: false, attributes: { 'tag': "0" }
+                field: "nomeUnidade",
+                title: "Unidade",
+                width: 90,
+                sortable: false,
+                attributes: {
+                    'tag': "0"
+                }
             },
             {
-                field: "referencia", title: "Ref.", width: 80, attributes: { 'tag': "1" }
+                field: "referencia",
+                title: "Ref.",
+                width: 80,
+                attributes: {
+                    'tag': "1"
+                }
             },
             {
-                field: "cod_Barras", title: "Cód. Barras", width: 120, attributes: { 'tag': "1" }
+                field: "cod_Barras",
+                title: "Cód. Barras",
+                width: 120,
+                attributes: {
+                    'tag': "1"
+                }
             },
             {
-                field: "preco", title: "Preço", format: "{0:C}", width: 100, attributes: { class: "text-right", 'tag': "1" }
+                field: "preco",
+                title: "Preço",
+                format: "{0:C}",
+                width: 100,
+                attributes: {
+                    class: "text-right",
+                    'tag': "1"
+                }
             },
             {
-                field: "precoAtacado", title: "Preço Atac.", format: "{0:C}", width: 110, attributes: { class: "text-right", 'tag': "1" }
+                field: "precoAtacado",
+                title: "Preço Atac.",
+                format: "{0:C}",
+                width: 110,
+                attributes: {
+                    class: "text-right",
+                    'tag': "1"
+                }
             },
             {
-                field: "estoque", title: "Est. Disp.", format: "{0:N3}", width: 100, attributes: { class: "text-right", 'tag': "0" }
+                field: "estoque",
+                title: "Est. Disp.",
+                format: "{0:N3}",
+                width: 100,
+                attributes: {
+                    class: "text-right",
+                    'tag': "0"
+                }
             },
             {
-                field: "estoquereservado", title: "Est. Reser.", format: "{0:N3}", width: 100, attributes: { class: "text-right", 'tag': "0" }, sortable: false
+                field: "estoquereservado",
+                title: "Est. Reser.",
+                format: "{0:N3}",
+                width: 100,
+                attributes: {
+                    class: "text-right",
+                    'tag': "0"
+                },
+                sortable: false
             },
             {
-                field: "estoqueTotal", title: "Est. Total", template: "#: kendo.toString(estoque + estoquereservado, 'n3') #", width: 100, attributes: { class: "text-right", 'tag': "0" }, sortable: false
+                field: "estoqueTotal",
+                title: "Est. Total",
+                template: "#: kendo.toString(estoque + estoquereservado, 'n3') #",
+                width: 100,
+                attributes: {
+                    class: "text-right",
+                    'tag': "0"
+                },
+                sortable: false
             }
         ],
         sortable: {
@@ -322,7 +393,9 @@ $(function () {
         $('.tbSearchFor2 input:first').clone().addClass('cloned').appendTo('.tbSearchFor2').parent().find("input:last").val('');
         $('.condition input:first').clone().addClass('cloned').appendTo('.filterButtons .form-group');
         $('.filterButtons input.cloned').bootstrapSwitch();
-        $('.filterButtons .bootstrap-switch-small:last').css({ 'margin-bottom': '10px' });
+        $('.filterButtons .bootstrap-switch-small:last').css({
+            'margin-bottom': '10px'
+        });
         $('.filterButtons .bootstrap-switch-small:last').addClass('cloned');
         $('#btnRemoveFilter').removeClass('hidden');
 
@@ -364,15 +437,15 @@ $(function () {
         if (value.attributes.tag == '1') {
             $('.selectSearchFor select')
                 .append($("<option></option>")
-                .attr("value", value.field)
-                .text(value.title));
+                    .attr("value", value.field)
+                    .text(value.title));
         }
     });
 
     $('.selectSearchFor select')
         .append($("<option></option>")
-        .attr("value", 'dbo.removehora(p.data_cadastro)')
-        .text('Data Cadastrado'));
+            .attr("value", 'dbo.removehora(p.data_cadastro)')
+            .text('Data Cadastrado'));
 
     //QuickTips();
 
@@ -525,7 +598,9 @@ function keepSessionAlive() {
 };*/
 
 var getNextDay = function () {
-    $(document).ajaxStart(function () { Pace.restart(); });
+    $(document).ajaxStart(function () {
+        Pace.restart();
+    });
     todayDate.setDate(todayDate.getDate() + 1);
     $('.selectSearchFor option[value="dbo.removehora(p.data_cadastro)"]').attr('selected', 'selected');
     $('.selectConditions option[value="between"]').attr('selected', 'selected');
@@ -536,7 +611,9 @@ var getNextDay = function () {
 };
 
 var getPrevDay = function () {
-    $(document).ajaxStart(function () { Pace.restart(); });
+    $(document).ajaxStart(function () {
+        Pace.restart();
+    });
     todayDate.setDate(todayDate.getDate() - 1);
     $('.selectSearchFor option[value="dbo.removehora(p.data_cadastro)"]').attr('selected', 'selected');
     $('.selectConditions option[value="between"]').attr('selected', 'selected');

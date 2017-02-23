@@ -116,13 +116,7 @@
 }
 
 
-/*.adrSearch button {
-    position: absolute;
-    top: 0;
-    right: 15px;
-}
-
-.calendarBtn span {
+/*.calendarBtn span {
     position: absolute;
     top: 0;
     right: 15px;
@@ -167,3 +161,7 @@
 
 
 /** /Select2 **/
+
+#telephonesGrid table tr td, #telephonesGrid input {
+    text-transform: uppercase !important;
+}
