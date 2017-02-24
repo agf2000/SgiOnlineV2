@@ -2,6 +2,8 @@
 
 $(function () {
 
+    $(".x_content").LoadingOverlay("show");
+
     $('[data-toggle="tooltip"]').tooltip();
     PNotify.prototype.options.styling = "bootstrap3";
     kendo.culture("pt-BR");
@@ -26,8 +28,6 @@ $(function () {
             }
         });*/
     }
-
-    $(".x_content").LoadingOverlay("show");
 
     $('#kddlConditions').kendoDropDownList();
 

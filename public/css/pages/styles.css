@@ -1,0 +1,112 @@
+.body {
+    background-color: #222d32 !important;
+}
+
+.logo-mini {
+    display: none;
+}
+
+a {
+    color: #FFFFFF !important;
+}
+
+.nav-tabs a {
+    color: #555 !important;
+}
+
+.nav_menu {
+    background-color: #286090 !important;
+}
+
+.nav_title {
+    background-color: #FFFFFF !important;
+}
+
+.nav.navbar-nav>li>a {
+    color: #FFFFFF !important;
+}
+
+.left_col {
+    background-color: #222d32 !important;
+}
+
+.nav_title a.site_title i {
+    margin-top: 5px !important;
+    border-color: #666 !important;
+    padding: 5px !important;
+    padding-right: 6px !important;
+    color: #666 !important;
+    font-size: 28px !important;
+    font-weight: bolder !important;
+    font-style: normal;
+}
+
+.nav_title a.site_title {
+    padding-top: 0 !important;
+}
+
+.site_title {
+    padding: 0 !important;
+    line-height: 53px !important;
+    text-align: center !important;
+}
+
+.dropdown-usermenu a {
+    color: #000000 !important;
+}
+
+.top_nav .nav>li>a:focus,
+.top_nav .nav>li>a:hover,
+.top_nav .nav .open>a,
+.top_nav .nav .open>a:focus,
+.top_nav .nav .open>a:hover {
+    background: none !important;
+}
+
+body .container.body .right_col {
+    background-color: #EDEDED !important;
+}
+
+
+/** Select2 **/
+
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0 !important;
+    min-height: 34px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #73879C;
+    padding-top: 3px;
+    text-transform: uppercase;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding-top: 3px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 32px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice,
+.select2-container--default .select2-selection--multiple .select2-selection__clear {
+    margin-top: 2px;
+    border: none;
+    border-radius: 0 !important;
+    padding: 3px 5px;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border: 1px solid #ccc;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-top: 0 !important;
+}
+
+
+/** /Select2 **/

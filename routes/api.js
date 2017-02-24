@@ -2,6 +2,7 @@ var express = require("express");
 var productsController = require("../controllers/productsController");
 var clientsController = require("../controllers/clientsController");
 var servicesController = require("../controllers/servicesController");
+var salesController = require("../controllers/salesController");
 var jsonData = require("../data/jsonData");
 
 var router = express.Router();
@@ -88,6 +89,18 @@ router.put('/saveTelephone', function (req, res) {
 
 router.delete('/removeTelephone/:id', function (req, res) {
 	servicesController.removeTelephone(req, res, req.params.id);
+});
+
+router.get('/getSales', function (req, res) {
+	salesController.getSales(req, res, req.query.orderBy, req.query.orderDir, req.query.pageIndex, req.query.pageSize, req.query.sgiId, req.query.searchFor);
+});
+
+router.get('/getSaleItems', function (req, res) {
+	salesController.getSaleItems(req, res, req.query.saleId);
+});
+
+router.get('/getSale/:saleId/:sgiId', function (req, res) {
+	salesController.getSale(req, res, req.query.saleId, req.query.sgiId);
 });
 
 module.exports = router;

@@ -1,0 +1,347 @@
+<div class="x_panel">
+    <div class="x_content">
+        <div class="pull-left">
+            <div class="radio-inline">
+                <label class="radio-inline">
+                    <input checked id="saleType1" name="saleType" type="radio" value="1" tabindex="1">Orçamento
+                </label>
+            </div>
+            <div class="radio-inline">
+                <label class="radio-inline">
+                    <input id="saleType2" name="saleType" type="radio" value="2" tabindex="2">Pedido
+                </label>
+            </div>
+            <div class="radio-inline">
+                <label class="radio-inline">
+                    <input id="saleType3" name="saleType" type="radio" value="3" tabindex="3">Condicional
+                </label>
+            </div>
+            <div class="radio-inline">
+                <label class="radio-inline">
+                    <input id="saleType4" name="saleType" type="radio" value="4" tabindex="4">DAV
+                </label>
+            </div>
+        </div>
+
+        <div class="pull-right">
+            <span id="saleDate"></span>
+        </div>
+    </div>
+</div>
+
+<div class="x_panel">
+    <div class="x_title">
+        <div class="col-xs-6">
+            <h4>&nbsp; Cliente</h4>
+        </div>
+        <div class="col-xs-6">
+            <h4>&nbsp; Vendedor</h4>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <select aria-hidden="true" class="form-control" id="select2Clients" tabindex="5">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="form-group">
+                <select aria-hidden="true" class="form-control" id="select2Salesmen" tabindex="6">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="x_panel">
+    <div class="x_title">
+        <div class="text-center">
+            <h4>Itens do pedido</h4>
+        </div>
+    </div>
+    <div class="x_content">
+        <div class="form-inline">
+            <div class="form-group col-xs-8">
+                <select id="select2Products" class="form-control" tabindex="7" aria-hidden="true" disabled>
+                                        <option></option>
+                                    </select>
+            </div>
+            <div class="form-group col-xs-4">
+                <div class="input-group">
+                    <input id="productQty" type="text" class="form-control" value="1" tabindex="8">
+                    <span class="input-group-btn">
+                                            <button id="btnAddProduct" class="btn btn-primary" disabled>
+                                                <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="saleItems" class="table table-bordered table-striped dataTable">
+        <thead data-bind="visible: selectedProducts().length">
+            <tr class="headings">
+                <th class="column-title col-xs-4">Produto </th>
+                <th class="column-title col-xs-1">Quant. </th>
+                <th class="column-title col-xs-2">Preço </th>
+                <th class="column-title col-xs-1">Desc. (%) </th>
+                <th class="column-title col-xs-2">Total </th>
+                <th class="column-title col-xs-1 text-center">
+                    Atualizar
+                </th>
+                <th class="column-title col-xs-1 last text-center" colspan="7">
+                    Excluir
+                </th>
+            </tr>
+        </thead>
+        <tbody data-bind="template: { name: 'eachProductTmpl', foreach: selectedProducts }"></tbody>
+    </table>
+    <script type="text/html" id="eachProductTmpl">
+        <tr data-bind="css: { 'noStock': qTyStock() <= 0 }">
+            <td>
+                <input data-bind="value: productName()" class="form-control col-xs-12" readonly />
+            </td>
+            <td>
+                <input data-bind="commaDecimalFormatter: qTy, valueUpdate: 'afterkeydown'" class="form-control col-xs-12" readonly />
+            </td>
+            <td>
+                <input data-bind="commaDecimalFormatter: price.extend({decimals: 2}), valueUpdate: 'afterkeydown'" class="form-control col-xs-12" readonly />
+            </td>
+            <td>
+                <input data-bind="commaDecimalFormatter: discount, valueUpdate: 'afterkeydown'" class="form-control col-xs-12" readonly />
+            </td>
+            <td>
+                <input data-bind="commaDecimalFormatter: totalValue" class="form-control col-xs-12" readonly />
+            </td>
+            <td class="text-center">
+                <button class="btn btn-default btn-sm" title="Atualizar" data-bind="click: editItem"><span class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-default btn-sm hidden" title="Cancelar" data-bind="click: cancelItem"><span class="glyphicon glyphicon-ban-circle"></span></button>
+            </td>
+            <td class="text-center">
+                <button class="btn btn-default btn-sm" data-bind="click: removeItem"><span class="glyphicon glyphicon-remove"></span></button>
+            </td>
+        </tr>
+    </script>
+</div>
+
+<div class="x_panel">
+    <div class="x_title">
+        <div class="text-center">
+            <h4>Total do Pedido</h4>
+        </div>
+    </div>
+    <div class="x_content">
+        <div class="col-xs-12">
+            <div class="col-md-2 col-xs-12 text-center tile">
+                <label>Sub-Total:</label>
+
+                <h3 data-bind="text: 'R$ ' +  extendedPrice().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></h3>
+            </div>
+
+            <div class="col-md-7 col-md-offset-1 col-xs-12 text-center">
+                <div class="col-xs-5 text-center">
+                    <h4>Descontos:</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon">R$</span>
+                        <input class="col-xs-12 form-control" onfocus="this.select();" data-bind="commaDecimalFormatter: totalDiscount" id="txtBoxTotalDiscount" type="text" tabindex="10">
+                    </div>
+                </div>
+
+                <div class="col-xs-5 col-xs-offset-2 text-center">
+                    <h4>Descontos:</h4>
+                    <div class="input-group">
+                        <span class="input-group-addon">%</span>
+                        <input class="col-xs-12 form-control" onfocus="this.select();" data-bind="commaDecimalFormatter: totalPercDiscount" id="txtBoxTotalPercDiscount" type="text" tabindex="21">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2 col-xs-12 text-center tile">
+                <label>Total:</label>
+
+                <h3 data-bind="text: 'R$ ' +  totalAmount().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="x_panel">
+    <div class="x_title">
+        <div class="text-center">
+            <h4>Pagamento</h4>
+        </div>
+    </div>
+    <div class="x_content">
+        <div class="col-xs-12 col-md-4">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-xs-5 col-md-4" for="payPlan">
+                        Restante:
+                    </label>
+                    <div class="col-md-7">
+                        <span style="font-size: 15px;" data-bind="html: 'R$ ' +  parseFloat(parseFloat(totalAmount().toFixed(2)) - parseFloat((parseFloat(my.vm.totalCard().toFixed(2)) + parseFloat(my.vm.totalCash().toFixed(2)) + parseFloat(my.vm.totalCred().toFixed(2)) - parseFloat(my.vm.feeValue().toFixed(2))).toFixed(2))).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), css: parseFloat((parseFloat(my.vm.totalCard().toFixed(2)) + parseFloat(my.vm.totalCash().toFixed(2)) + parseFloat(my.vm.totalCred().toFixed(2)) - parseFloat(my.vm.feeValue().toFixed(2))).toFixed(2)) !== parseFloat(totalAmount().toFixed(2)) ? 'label label-danger' : 'label label-success'"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-5 col-md-4" for="payMoney">
+                        Dinheiro:
+                    </label>
+                    <div class="col-xs-7 col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" onclick="return false;">
+                                    R$
+                                </button>
+                            </span>
+                            <input type="text" id="payCash" class="form-control col-md-7 col-xs-12 totals" onfocus="this.select();" onkeypress="return my.isNumberKey(event)" value="0,00" tabindex="13" data-bind="commaDecimalFormatter: totalCash">
+                            <span class="input-group-btn">
+                                <button id="btnSetCash" class="btn btn-success" data-bind="click: editPayment" value="cash">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-5 col-md-4" for="payCard">
+                        Cartão:
+                    </label>
+                    <div class="col-xs-7 col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" onclick="return false;">
+                                    R$
+                                </button>
+                            </span>
+                            <input type="text" id="payCard" class="form-control col-md-7 col-xs-12 totals" onfocus="this.select();" onkeypress="return my.isNumberKey(event)" value="0,00" tabindex="14" data-bind="commaDecimalFormatter: totalCard">
+                            <span class="input-group-btn">
+                                <button id="btnSetCard" class="btn btn-success" data-bind="click: editPayment" value="card">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-5 col-md-4" for="payCredit">
+                        <select id="selectCCC" class="form-control selectpicker" tabindex="16" title="Tipos de Pag.">
+                            <option value="">Tipos de Pag.</option>
+                            <option value="2">Crediário</option>
+                            <option value="5">Cheque</option>
+                            <option value="3">Convênio</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-7 col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <i>R$</i>
+                            </span>
+                            <input type="text" id="payCred" class="form-control col-md-7 col-xs-12 totals" onfocus="this.select();" onkeypress="return my.isNumberKey(event)" value="0,00" tabindex="15" data-bind="commaDecimalFormatter: totalCred">
+                            <span class="input-group-btn">
+                                <button id="btnSetCred" class="btn btn-success" data-bind="click: editPayment" value="cred">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-md-6">
+            <div class="form-horizontal">
+                <div class="form-group" style="padding-top: 8px;">
+                    <label>
+                    </label>
+                    <div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="txtBoxFee">
+                        Acréscimo:
+                    </label>
+                    <div class="col-md-7">
+                        <div class="input-group">
+                            <span class="input-group-addon">R$</span>
+                            <input id="txtBoxFee" class="form-control" type="text" readonly value="0,00" data-bind="commaDecimalFormatter: feeValue" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="cardOperator">
+                        Operadora:
+                    </label>
+                    <div class="col-md-7">
+                        <select id="select2CardProviders" class="form-control col-md-7 col-xs-12" tabindex="17" aria-hidden="true">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="payPlan">
+                        Condição:
+                    </label>
+                    <div class="col-md-7">
+                        <select id="select2PayConditions" class="form-control col-md-7 col-xs-12" tabindex="18" aria-hidden="true">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6 col-md-2">
+            <div class="form-group">
+                <label>
+                </label>
+                <div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>
+                </label>
+                <div>
+                </div>
+            </div>
+            <div class="form-group hidden">
+                <strong>Total com Acréscimo:</strong>
+                <h3 id="lblBoxTotal" style="margin-top: 4px;">0.00</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="x_panel">
+    <div class="x_title">
+        <div class="text-center">
+            <h4>Observações</h4>
+        </div>
+    </div>
+
+    <div class="x_content">
+        <textarea class="resizable_textarea form-control" data-autosize-on="true" id="textAreaComments" tabindex="19"></textarea>
+    </div>
+</div>
+
+<div class="x_panel">
+    <div class="x_title">
+    </div>
+    <div class="x_content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-2">
+                <button class="btnReturn btn btn-default btn-block" tabindex="22">
+                    &nbsp; <i class="fa fa-arrow-left"></i> Consultar
+                </button> &nbsp;
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-2 col-md-offset-3">
+                <button class="btn btn-default btn-block" id="btnCancel" tabindex="21">Novo Pedido</button> &nbsp;
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-2 col-md-offset-3">
+                <button class="btn btn-primary btn-block" data-bind="enable: allowClose" id="btnFinalize" tabindex="20">Finalizar</button>
+            </div>
+        </div>
+    </div>
+</div>

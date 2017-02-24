@@ -62,6 +62,9 @@ app.use('/produtos', products);
 var clients = require('./routes/clients');
 app.use('/clientes', clients);
 
+var sales = require('./routes/sales');
+app.use('/davs', sales);
+
 var users = require('./routes/users');
 app.use('/users', users);
 

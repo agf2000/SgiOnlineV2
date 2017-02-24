@@ -123,45 +123,10 @@
 }*/
 
 
-/** Select2 **/
-
-.select2-container--default .select2-selection--single,
-.select2-container--default .select2-selection--multiple {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 0;
-    min-height: 34px;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #73879C;
-    padding-top: 3px;
-    text-transform: uppercase;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__rendered {
-    padding-top: 3px;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 32px;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice,
-.select2-container--default .select2-selection--multiple .select2-selection__clear {
-    margin-top: 2px;
-    border: none;
-    border-radius: 0;
-    padding: 3px 5px;
-}
-
-.select2-container--default.select2-container--focus .select2-selection--multiple {
-    border: 1px solid #ccc;
-}
-
-
-/** /Select2 **/
-
-#telephonesGrid table tr td, #telephonesGrid input {
+/*#telephonesGrid table tr td, #telephonesGrid input {
     text-transform: uppercase !important;
+}*/
+
+span.k-input {
+    text-transform: capitalize !important;
 }

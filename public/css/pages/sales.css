@@ -1,0 +1,28 @@
+#divSql {
+    display: none;
+}
+
+#salesGrid.k-grid td {
+    white-space: nowrap;
+}
+
+.noStock input {
+    border-color: red !important;
+    color: red !important;
+}
+
+.negative {
+    border-color: red !important;
+    color: red !important;
+}
+
+.h4,
+.h5,
+.h6,
+h4,
+h5,
+h6 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
