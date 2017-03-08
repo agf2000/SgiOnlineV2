@@ -1,0 +1,37 @@
+body {
+    width: 670px;
+    margin: 0 auto;
+    font-family: Tahoma;
+}
+
+@media print {
+    .noPrint {
+        display: none;
+    }
+}
+
+table {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+tr {
+    margin: 0;
+    padding: 0;
+}
+
+td {
+    margin: 0;
+}
+
+#footer {
+    width: 670px;
+    margin-top: 10px;
+    /*position: absolute;
+    bottom: 50px;*/
+}
+
+hr {
+    margin: 0;
+}

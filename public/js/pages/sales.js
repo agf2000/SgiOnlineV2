@@ -150,7 +150,7 @@ $(function () {
                 $('.selectConditions select:first option:selected').val() + " '" +
                 ($('.selectConditions select:first option:selected').val() == 'like' ?
                     "%" + $('.tbSearchFor input:first').val() + "%'" :
-                    $('.tbSearchFor input:first').val() + "'") : " and dbo.removehora(d.data_cadastro) = '" + moment(my.today).format('DD/MM/YYYY') + "'";
+                    $('.tbSearchFor input:first').val() + "'") : " and convert(varchar, d.data_cadastro, 103) = '" + moment(my.today).format('DD/MM/YYYY') + "' ";
             if ($('.tbSearchFor input:first').val().length > 0 && $('.tbSearchFor2 input:first').val().length > 0) {
                 strSearch = ' and ' + $('.selectSearchFor select:first option:selected').val() + ' ' +
                     $('.selectConditions select:first option:selected').val() + " '" +
@@ -172,10 +172,34 @@ $(function () {
                     }
                 });
             }
+
+            // var retyd = /(today|yesterday|\d{1,2}\/\d{1,2}\/\d{4})/g;
+            // var aDate = strSearch.match(retyd)[0];
+            // var bDate = strSearch.match(retyd)[1];
+
+            // if (aDate) {
+            //     var theDate1 = new Date(aDate).toLocaleDateString("en-US");
+            //     if (theDate1.getMonth) {
+            //         aDate = "'" + aDate + "'";
+            //         strSearch = strSearch.replace(aDate, "convert(varchar, cast(" + moment(aDate).format('MM/DD/YYYY') + " as datetime), 103) ");
+            //         if ($('.tbSearchFor input').val().length) $('.tbSearchFor input').val(moment(my.today).format('DD/MM/YYYY'));
+            //     }
+            // }
+
+            // if (bDate) {
+            //     var theDate2 = new Date(bDate).toLocaleDateString("en-US");
+            //     if (theDate2.getMonth) {
+            //         bDate = "'" + bDate + "'";
+            //         strSearch = strSearch.replace(bDate, "convert(varchar, cast(" + moment(bDate).format('MM/DD/YYYY') + " as datetime), 103) ");
+            //         if ($('.tbSearchFor input').val().length) $('.tbSearchFor input').val(moment(my.today).format('DD/MM/YYYY'));
+            //     }
+            // }
+
             var orderBy = data.sort[0] ? data.sort[0].field : 'NumDav';
             if (orderBy.toLowerCase() === 'data_cadastro') {
                 orderBy = 'd.data_cadastro';
             }
+
             return {
                 sgiId: my.userInfo.sgiid,
                 searchFor: strSearch,
@@ -466,7 +490,7 @@ $(function () {
         var grid = $('#salesGrid').data("kendoGrid");
         var dataItem = grid.dataSource.getByUid(my.uId);
 
-        window.open('/print.html?numDav=' + dataItem.NumDav);
+        window.open('/davs/print/' + dataItem.numdav + (dataItem.cod_funcionario ? '/' + dataItem.cod_funcionario : ''));
     });
 
     $('#btnConvertSelected').click(function (e) {
@@ -631,9 +655,9 @@ $(function () {
         var grid = $('#salesGrid').data("kendoGrid");
         var dataItem = grid.dataSource.getByUid(my.uId);
 
-        if (dataItem.Status == 1 || dataItem.Status == 3) {
-            if (dataItem.Cod_Funcionario === my.userInfo.SGIID) {
-                $.getJSON('/dnn/desktopmodules/sgi/api/sales/CancelSGISaleValidation?saleId=' + dataItem.NumDav, function (result) {
+        if (dataItem.status == 1 || dataItem.status == 3) {
+            if (dataItem.cod_funcionario === my.userInfo.sgiid) {
+                $.getJSON('/dnn/desktopmodules/sgi/api/sales/CancelSGISaleValidation?saleId=' + dataItem.numdav, function (result) {
                     if (result) {
                         if (result) {
                             CancelSale();
@@ -665,7 +689,7 @@ $(function () {
                     }
                 });
             } else {
-                if (!my.userInfo.Adm) {
+                if (!my.userInfo.adm) {
                     var notice2 = new PNotify({
                         title: 'Atenção!',
                         text: 'Somente o administrador pode cancelar este DAV.',
@@ -878,7 +902,7 @@ $(function () {
     $.each(salesGrid.columns, function (key, value) {
         if (value.attributes.tag == '1') {
             if (value.field.toLowerCase() == 'data_cadastro') {
-                value.field = 'dbo.removehora(d.data_cadastro)';
+                value.field = 'convert(varchar, d.data_cadastro, 103)';
                 value.title = 'Data Cadastrado';
             }
             $('.selectSearchFor select')
@@ -1041,27 +1065,50 @@ function CancelSale() {
 }
 
 var getNextDay = function () {
-    $(document).ajaxStart(function () {
-        Pace.restart();
-    });
+    // $(document).ajaxStart(function () {
+    //     Pace.restart();
+    // });
     my.today.setDate(my.today.getDate() + 1);
-    $('.selectSearchFor option[value="dbo.removehora(d.data_cadastro)"]').attr('selected', 'selected');
-    $('.selectConditions option[value="between"]').attr('selected', 'selected');
+    $('.selectSearchFor option[value="convert(varchar, d.data_cadastro, 103)"]').attr('selected', 'selected');
+    // $('.selectConditions option[value="between"]').attr('selected', 'selected');
     $('.tbSearchFor input').val(moment(my.today).format('DD/MM/YYYY'));
-    $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
+    // $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
     $('#salesGrid').data('kendoGrid').dataSource.read();
     return false;
 };
 
 var getPrevDay = function () {
-    $(document).ajaxStart(function () {
-        Pace.restart();
-    });
+    // $(document).ajaxStart(function () {
+    //     Pace.restart();
+    // });
     my.today.setDate(my.today.getDate() - 1);
-    $('.selectSearchFor option[value="dbo.removehora(d.data_cadastro)"]').attr('selected', 'selected');
-    $('.selectConditions option[value="between"]').attr('selected', 'selected');
+    $('.selectSearchFor option[value="convert(varchar, d.data_cadastro, 103)"]').attr('selected', 'selected');
+    // $('.selectConditions option[value="between"]').attr('selected', 'selected');
     $('.tbSearchFor input').val(moment(my.today).format('DD/MM/YYYY'));
-    $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
+    // $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
     $('#salesGrid').data('kendoGrid').dataSource.read();
     return false;
 };
+
+function toggleFullScreen(e) {
+    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+        (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        if (document.documentElement.requestFullScreen) {
+            document.documentElement.requestFullScreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullScreen) {
+            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+        $(e.target).removeClass('glyphicon-fullscreen');
+        $(e.target).addClass('glyphicon-fullscreen');
+    } else {
+        if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }
+    }
+}

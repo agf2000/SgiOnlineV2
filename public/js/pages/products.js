@@ -171,9 +171,9 @@ $(function () {
                 }
             },
             {
-                field: "nomeUnidade",
+                field: "nomeunidade",
                 title: "Unidade",
-                width: 90,
+                width: 80,
                 sortable: false,
                 attributes: {
                     'tag': "0"
@@ -181,14 +181,14 @@ $(function () {
             },
             {
                 field: "referencia",
-                title: "Ref.",
-                width: 80,
+                title: "Referência",
+                width: 100,
                 attributes: {
                     'tag': "1"
                 }
             },
             {
-                field: "cod_Barras",
+                field: "cod_barras",
                 title: "Cód. Barras",
                 width: 120,
                 attributes: {
@@ -206,10 +206,10 @@ $(function () {
                 }
             },
             {
-                field: "precoAtacado",
-                title: "Preço Atac.",
+                field: "precoatacado",
+                title: "Preço Atacado",
                 format: "{0:C}",
-                width: 110,
+                width: 120,
                 attributes: {
                     class: "text-right",
                     'tag': "1"
@@ -217,9 +217,9 @@ $(function () {
             },
             {
                 field: "estoque",
-                title: "Est. Disp.",
+                title: "Est. Disponível",
                 format: "{0:N3}",
-                width: 100,
+                width: 120,
                 attributes: {
                     class: "text-right",
                     'tag': "0"
@@ -227,9 +227,9 @@ $(function () {
             },
             {
                 field: "estoquereservado",
-                title: "Est. Reser.",
+                title: "Est. Reservado",
                 format: "{0:N3}",
-                width: 100,
+                width: 120,
                 attributes: {
                     class: "text-right",
                     'tag': "0"

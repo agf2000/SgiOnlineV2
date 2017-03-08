@@ -15,7 +15,7 @@ a {
 }
 
 .nav_menu {
-    background-color: #286090 !important;
+    background-color: #0063c9 !important;
 }
 
 .nav_title {
@@ -31,18 +31,11 @@ a {
 }
 
 .nav_title a.site_title i {
-    margin-top: 5px !important;
-    border-color: #666 !important;
-    padding: 5px !important;
-    padding-right: 6px !important;
-    color: #666 !important;
-    font-size: 28px !important;
-    font-weight: bolder !important;
-    font-style: normal;
+    padding: 0px !important;
 }
 
 .nav_title a.site_title {
-    padding-top: 0 !important;
+    padding-right: 3px !important;
 }
 
 .site_title {
@@ -110,3 +103,21 @@ body .container.body .right_col {
 
 
 /** /Select2 **/
+
+.k-grid-toolbar ol,
+.k-grid-toolbar ul {
+    margin: 0 !important;
+}
+
+.k-header a {
+    color: #666 !important;
+    font-weight: bolder;
+}
+
+.k-grid-content a {
+    color: #666 !important;
+}
+
+.k-state-selected a {
+    color: #444 !important;
+}

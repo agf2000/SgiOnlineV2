@@ -26,17 +26,17 @@ exports.getSales = function (req, res, orderBy, orderDir, pageIndex, pageSize, s
             ", fantasiaCliente = (select fantasia from cliente c where c.codigo = d.codcliente) " +
             ", vendedor = (select nome from funcionario c where c.codigo = d.codcliente) " +
             ", totalrows = count(*) over() " +
-            "from dav_cab d " +
-            "left outer join fisica f on f.pessoa = " + sgiId +
-            "where 1 = 1 " + // searchFor +
+            " from dav_cab d " +
+            " left outer join fisica f on f.pessoa = " + sgiId +
+            " where 1 = 1 " +
             " and (isnull(d.cod_funcionario, 0) = 0 or ((select top 1 1 from usuario where adm = 1 and funcionario = " + sgiId + ") = 1 or " +
-            "(f.supervisor = 1 and f.coddepartamento = (select top 1 coddepartamento from fisica where pessoa = d.cod_funcionario))) " +
-            "or d.cod_funcionario = " + sgiId + ") " +
-            ") a where a.rowid > ((" + pageIndex + " - 1) * " + pageSize + "); ";
-        sqlInst += "select count(*) as recordstotal from dav_cab d left outer join fisica f on f.pessoa = " + sgiId + " where 1 = 1 and ";
-        sqlInst += "(isnull(d.cod_funcionario, 0) = 0 or ((select top 1 1 from usuario where adm = 1 and funcionario = " + sgiId + ") = 1 or ";
-        sqlInst += "(f.supervisor = 1 and f.coddepartamento = (select top 1 coddepartamento from fisica where pessoa = d.cod_funcionario))) ";
-        sqlInst += "or d.cod_funcionario = " + sgiId + ") "; // + searchFor;
+            " (f.supervisor = 1 and f.coddepartamento = (select top 1 coddepartamento from fisica where pessoa = d.cod_funcionario))) " +
+            " or isnull(d.cod_funcionario, 0) = " + sgiId + ") " + searchFor +
+            " ) a where a.rowid > ((" + pageIndex + " - 1) * " + pageSize + ") ";
+        sqlInst += " select count(*) as recordstotal from dav_cab d left outer join fisica f on f.pessoa = " + sgiId + " where 1 = 1 and ";
+        sqlInst += " (isnull(d.cod_funcionario, 0) = 0 or ((select top 1 1 from usuario where adm = 1 and funcionario = " + sgiId + ") = 1 or ";
+        sqlInst += " (f.supervisor = 1 and f.coddepartamento = (select top 1 coddepartamento from fisica where pessoa = d.cod_funcionario))) ";
+        sqlInst += " or d.cod_funcionario = " + sgiId + ") " + searchFor + " ";
 
         db.querySql(sqlInst,
             function (data, err) {

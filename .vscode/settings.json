@@ -1,10 +1,12 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "window.zoomLevel": 0,
-    "editor.wrappingColumn": -1,
+    "editor.wordWrap": "off",
+    "html.format.wrapLineLength": 320,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.tabCompletion": true,
     "workbench.editor.enablePreview": false,
-    "html.format.indentHandlebars": true,
-    "html.format.wrapLineLength": 0,
-    "files.autoSaveDelay": 4000,
-    "files.autoSave": "afterDelay"
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "editor.tabSize": 4,
+    "editor.formatOnType": true
 }

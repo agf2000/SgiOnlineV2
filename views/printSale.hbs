@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}} </title>
+    <!-- Bootstrap -->
+    <link href="/./vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/./vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/./vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- kendo -->
+    <link href="/./vendors/kendo/2016.2.504/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="/./vendors/kendo/2016.2.504/styles/kendo.uniform.min.css" rel="stylesheet" />
+    <!-- pNotify -->
+    <link href="/./vendors/pnotify/css/pnotify.css" rel="stylesheet" />
+    <link href="/./vendors/pnotify/css/pnotify.buttons.css" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link href="/./css/pages/printSale.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="noPrint" style="margin: 10px auto;">
+        <button class="export-pdf">
+            Salvar como PDF
+        </button> &nbsp;
+        <button onclick="javascript: printMe(); return false;">
+            Imprimir
+        </button>
+    </div>
+
+    <div id="printableDiv">
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="3" style="text-align: center;">
+                        <h3 style="font-size: 12px; line-height: 15px;">
+                            Documento auxiliar de venda - Pedido<br> NÃO É DOCUMENTO FISCAL - NÃO É VÁLIDO COMO RECIBO OU COMO GARANTIA DE MERCADORIA<br> NÃO COMPROVA PAGAMENTO
+                        </h3>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <hr>
+                    </td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td colspan="3" style="text-align: center; font-weight: 500;">Identificação do Estabelecimento Emitente</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">{{data.empresa}}</td>
+
+                    <td style="text-align: right;">CNPJ: {{data.cnpj}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">{{data.enderecoempresa}}</td>
+
+                    <td style="text-align: right;">
+                        {{data.dtvenda}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Tel.: {{data.telefoneempresa}}</td>
+
+                    <td colspan="2">{{data.emailempresa}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <hr>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="3" style="text-align: center;">Identificação do Destinatário</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">Cliente: {{data.nome}}</td>
+
+                    <td style="text-align: right;">CPF/CNPJ: {{cpf_cnpj}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">{{data.enderecocliente}}</td>
+                </tr>
+
+                <tr>
+                    <td>Tel.: {{data.telefonecliente}}</td>
+
+                    <td colspan="2">{{data.vendedor}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <hr>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>DAV NR.: {{data.numdav}}</td>
+
+                    <td>Doc. Pedido: {{data.numdoc}}</td>
+
+                    <td style="text-align: right;">Doc. Fiscal:</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <hr>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">Observação: {{data.observacao}}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">Produto / Serviços</td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <td style="width: 5%">Código</td>
+
+                                    <td style="width: 41%">Descrição</td>
+
+                                    <td style="width: 8%; text-align: center;">Qtde.</td>
+
+                                    <td style="width: 12%; text-align: right;">Valor Bruto</td>
+
+                                    <td style="width: 8%; text-align: right;">Desc.</td>
+
+                                    <td style="width: 13%; text-align: right;">Valor Liq.</td>
+
+                                    <td style="width: 13%; text-align: right;">Val. Total</td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="8">
+                                        <hr>
+                                    </td>
+                                </tr>
+                            </thead>
+
+                            <tbody style="font-size: 90%;">
+                                {{#each data.saleitems as |item|}}
+                                <tr>
+                                    <td>{{item.codproduto}}</td>
+
+                                    <td>{{item.nome}}</td>
+
+                                    <td style="text-align: center;">{{item.quantidade}}</td>
+
+                                    <td style="text-align: right;">{{item.valorunitario}}</td>
+
+                                    <td style="text-align: right;">% {{item.descontoperc}}</td>
+
+                                    <td style="text-align: right;">{{item.descontovalue}}</td>
+
+                                    <td style="text-align: right;">{{item.valortotal}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>&nbsp;</td>
+
+                                    <td>&nbsp;</td>
+
+                                    <td>&nbsp;</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 65%;"></td>
+
+                                    <td style="width: 15%;">Desconto (%):</td>
+
+                                    <td style="text-align: right; width: 20%;">% {{data.descontoperc}}</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 65%;"></td>
+
+                                    <td style="width: 15%;">Valor Total:</td>
+
+                                    <td colspan="2" style="text-align: right; width: 20%;">R$ {{data.valortotal}}</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 65%;"></td>
+
+                                    <td style="width: 15%;">Desconto (R$):</td>
+
+                                    <td colspan="2" style="text-align: right; width: 20%;">R$ {{data.descontovalor}}</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 65%;"></td>
+
+                                    <td style="width: 15%;">Total Geral:</td>
+
+                                    <td colspan="2" style="text-align: right; width: 20%;">R$ {{data.valortotal}}</td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="3">
+                                        <hr>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8" style="text-align: right;">
+                                        Forma(s) de pagamento:
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" style="text-align: right;"> {{data.condpagto}}: R$ {{data.valortotal}}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="footer">
+            <tbody>
+                <tr>
+                    <td style="text-align: center;">
+                        <hr> É vedada a autenticação deste documento
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- jquery js -->
+    <script src="/./vendors/jquery/dist/jquery.min.js"></script>
+
+    <!-- Utilities -->
+    {{!--
+    <script src="js/app/utilities.js"></script>--}}
+
+    <!-- jsPDF -->
+    <script src="/./vendors/jspdf/dist/jspdf.min.js"></script>
+
+    <!-- kendo UI -->
+    <script src="/./vendors/kendo/2016.2.504/js/kendo.web.min.js"></script>
+    <script src="/./vendors/kendo/2016.2.504/js/cultures/kendo.culture.pt-BR.min.js"></script>
+    <script src="/./vendors/kendo/2016.2.504/js/messages/kendo.messages.pt-BR.min.js"></script>
+
+    <!-- page -->
+    <script src="/./js/pages/printSale.js"></script>
+</body>
+
+</html>
