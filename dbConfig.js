@@ -1,7 +1,7 @@
 exports.dbConfig = {
     user: "sa",
     password: "sa",
-    server: "192.168.25.170\\sqlexpress",
-    database: "SGI",
+    server: "localhost\\sqlexpress",
+    database: "trigo",
     port: 1433
 }

@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require("passport");
+var helpers = require("./public/js/handlebars/helpers.js");
 require("./passport-init");
 
 var app = express();
@@ -15,7 +16,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('hbs', hbs({
 	extname: 'hbs',
 	defaultLayout: 'layout',
-	helpers: require("handlebars-form-helpers"),
+	helpers: helpers,
+	// helpers: require("./public/js/handlebars/helpers.js").helpers,
 	layoutsDir: path.join(__dirname, '/views/layouts/'),
 	partialsDir: path.join(__dirname, '/views/partials/')
 }));

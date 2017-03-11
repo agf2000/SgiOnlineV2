@@ -490,7 +490,7 @@ $(function () {
         var grid = $('#salesGrid').data("kendoGrid");
         var dataItem = grid.dataSource.getByUid(my.uId);
 
-        window.open('/davs/print/' + dataItem.numdav + (dataItem.cod_funcionario ? '/' + dataItem.cod_funcionario : ''));
+        window.open('/davs/print/' + dataItem.numdav + '/' + (dataItem.cod_funcionario ? dataItem.cod_funcionario : '0') + '/1');
     });
 
     $('#btnConvertSelected').click(function (e) {
@@ -899,16 +899,46 @@ $(function () {
         salesGrid.dataSource.read();
     });
 
+    $('.selectSearchFor').select2({
+        // placeholder: "",
+        // width: '100%',
+        tags: true,
+        language: "pt-BR",
+        // allowClear: true,
+        // escapeMarkup: function (markup) {
+        //     return markup;
+        // },
+        minimumInputLength: -1,
+        minimumResultsForSearch: -1,
+        // templateResult: function (repo) {
+        //     if (repo.loading) {
+        //         return repo.text;
+        //     }
+        //     var markup = '<option value="' + repo.id + '">' + repo.text + '</option>';
+        //     return markup;
+        // },
+        templateSelection: function (repo) {
+            return repo.text;
+        }
+    });
+
     $.each(salesGrid.columns, function (key, value) {
         if (value.attributes.tag == '1') {
             if (value.field.toLowerCase() == 'data_cadastro') {
                 value.field = 'convert(varchar, d.data_cadastro, 103)';
                 value.title = 'Data Cadastrado';
             }
-            $('.selectSearchFor select')
+            // var newOption = new Option(value.title, value.field, true, true);
+            // $(".selectSearchFor").append(newOption).trigger('change');
+            $(".selectSearchFor")
                 .append($("<option></option>")
                     .attr("value", value.field)
                     .text(value.title));
+            $(".selectSearchFor").trigger("change");
+            // $('.selectSearchFor select')
+            //     .append($("<option></option>")
+            //         .attr("value", value.field)
+            //         .text(value.title));
         }
     });
 

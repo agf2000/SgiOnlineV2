@@ -89,9 +89,9 @@
                 </tr>
 
                 <tr>
-                    <td colspan="2">Cliente: {{data.nome}}</td>
+                    <td colspan="2">Cliente: {{data.nomecliente}}</td>
 
-                    <td style="text-align: right;">CPF/CNPJ: {{cpf_cnpj}}</td>
+                    <td style="text-align: right;">CPF/CNPJ: {{data.cpf_cnpj}}</td>
                 </tr>
 
                 <tr>
@@ -101,7 +101,7 @@
                 <tr>
                     <td>Tel.: {{data.telefonecliente}}</td>
 
-                    <td colspan="2">{{data.vendedor}}</td>
+                    <td colspan="2">Vendedor: {{data.vendedor}}</td>
                 </tr>
 
                 <tr>
@@ -122,10 +122,6 @@
                     <td colspan="3">
                         <hr>
                     </td>
-                </tr>
-
-                <tr>
-                    <td colspan="3">Observação: {{data.observacao}}</td>
                 </tr>
 
                 <tr>
@@ -172,13 +168,13 @@
 
                                     <td style="text-align: center;">{{item.quantidade}}</td>
 
-                                    <td style="text-align: right;">{{item.valorunitario}}</td>
+                                    <td style="text-align: right;">{{decimals item.valorunitario}}</td>
 
-                                    <td style="text-align: right;">% {{item.descontoperc}}</td>
+                                    <td style="text-align: right;">{{percent item.descontoperc}}</td>
 
-                                    <td style="text-align: right;">{{item.descontovalue}}</td>
+                                    <td style="text-align: right;">{{decimals item.valorliq}}</td>
 
-                                    <td style="text-align: right;">{{item.valortotal}}</td>
+                                    <td style="text-align: right;">{{decimals item.valortotal}}</td>
                                 </tr>
                                 {{/each}}
                             </tbody>
@@ -188,46 +184,39 @@
                             <tbody>
                                 <tr>
                                     <td>&nbsp;</td>
-
-                                    <td>&nbsp;</td>
-
-                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="5" colspan="4" style="vertical-align: top; padding-right: 20px;">
+                                        Observação: {{data.observacao}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td style="width: 65%;"></td>
-
                                     <td style="width: 15%;">Desconto (%):</td>
 
-                                    <td style="text-align: right; width: 20%;">% {{data.descontoperc}}</td>
+                                    <td style="text-align: right; width: 20%;">{{percent data.descontoperc}}</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="width: 65%;"></td>
-
                                     <td style="width: 15%;">Valor Total:</td>
 
-                                    <td colspan="2" style="text-align: right; width: 20%;">R$ {{data.valortotal}}</td>
+                                    <td colspan="2" style="text-align: right; width: 20%;">{{ currency data.valortotal}}</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="width: 65%;"></td>
-
                                     <td style="width: 15%;">Desconto (R$):</td>
 
-                                    <td colspan="2" style="text-align: right; width: 20%;">R$ {{data.descontovalor}}</td>
+                                    <td colspan="2" style="text-align: right; width: 20%;">{{ currency data.descontovalor}}</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="width: 65%;"></td>
-
                                     <td style="width: 15%;">Total Geral:</td>
 
-                                    <td colspan="2" style="text-align: right; width: 20%;">R$ {{data.valortotal}}</td>
+                                    <td colspan="2" style="text-align: right; width: 20%;">{{ currency data.valortotal}}</td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="3">
+                                    <td colspan="8">
                                         <hr>
                                     </td>
                                 </tr>
@@ -235,12 +224,7 @@
 
                             <tfoot>
                                 <tr>
-                                    <td colspan="8" style="text-align: right;">
-                                        Forma(s) de pagamento:
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8" style="text-align: right;"> {{data.condpagto}}: R$ {{data.valortotal}}</td>
+                                    <td colspan="8" style="text-align: right;">{{data.pagamentos}}</td>
                                 </tr>
                             </tfoot>
                         </table>
