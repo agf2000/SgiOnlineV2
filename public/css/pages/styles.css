@@ -121,3 +121,7 @@ body .container.body .right_col {
 .k-state-selected a {
     color: #444 !important;
 }
+
+.btn {
+    border-radius: 0 !important;
+}

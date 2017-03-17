@@ -11,3 +11,7 @@ module.exports.percent = function (value) {
 module.exports.decimals = function (value) {
     return parseFloat(value).toFixed(2);
 }
+
+module.exports.json = function (context) {
+    return JSON.stringify(context);
+}

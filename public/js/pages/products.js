@@ -10,24 +10,7 @@ $(function () {
     kendo.culture().calendar.firstDay = 1;
     var todayDate = new Date();
 
-    /*function rotation() {
-        $('.logo-mini').transform({ rotateY: '0' });
-        $('.logo-mini').animate({ rotateY: '360deg' }, 3000, 'linear', function () {
-            rotation();
-        });
-    }
-    rotation();*/
-
-    if (my.userInfo === undefined) {
-        my.userInfo = $.parseJSON(Cookies.getJSON('SGIUser').replace('j:', ''))
-        /*$.get('/api/getUserInfo', function (user) {
-            if (user) {
-                my.userInfo = user;  
-
-                QuickTips();              
-            }
-        });*/
-    }
+    my.userInfo = Cookies.getJSON('SGIUser');
 
     $('#kddlConditions').kendoDropDownList();
 

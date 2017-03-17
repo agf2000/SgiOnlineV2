@@ -20,13 +20,13 @@
 	<!-- pNotify -->
 	<link href="/./vendors/pnotify/css/pnotify.css" rel="stylesheet" />
 	<link href="/./vendors/pnotify/css/pnotify.buttons.css" rel="stylesheet" />
+	<!-- pace -->
+	<link href="/./vendors/pace/pace.min.css" rel="stylesheet" />
 	<!-- Custom Theme Style -->
 	<link href="/./build/css/custom.min.css" rel="stylesheet">
 	<!-- modifications -->
-	<link href="/css/pages/styles.css" rel="stylesheet">
-	{{#each css}}
-		<link href="{{this}}" rel="stylesheet">
-	{{/each}}
+	<link href="/css/pages/styles.css" rel="stylesheet"> {{#each css}}
+	<link href="{{this}}" rel="stylesheet"> {{/each}}
 </head>
 
 <body class="nav-md">
@@ -205,10 +205,12 @@
 	<script src="/./vendors/pnotify/js/pnotify.callbacks.js"></script>
 	<script src="/./vendors/pnotify/js/pnotify.confirm.js"></script>
 	<script src="/./vendors/pnotify/js/pnotify.mobile.js"></script>
+	<!-- pace -->
+	<script src="/./vendors/pace/pace.min.js"></script>
 	<!-- Custom Theme Scripts -->
 	<script src="/./build/js/custom.min.js"></script>
 	{{#each script}}
-		<script src="{{this}}"></script>
+	<script src="{{this}}"></script>
 	{{/each}}
 </body>
 

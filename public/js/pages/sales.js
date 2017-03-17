@@ -8,29 +8,12 @@ $(function () {
     PNotify.prototype.options.styling = "bootstrap3";
     kendo.culture('pt-BR');
     kendo.culture().calendar.firstDay = 1;
+    my.today = new Date();
 
     // var register = my.getQuerystring('novo', my.getStringParameterByName('cadastro'));
     // my.saleId = my.getQuerystring('numDav', my.getStringParameterByName('numDav'));
-    my.today = new Date();
 
-    /*function rotation() {
-        $('.logo-mini').transform({ rotateY: '0' });
-        $('.logo-mini').animate({ rotateY: '360deg' }, 3000, 'linear', function () {
-            rotation();
-        });
-    }
-    rotation();*/
-
-    if (my.userInfo === undefined) {
-        my.userInfo = $.parseJSON(Cookies.getJSON('SGIUser').replace('j:', ''))
-        /*$.get('/api/getUserInfo', function (user) {
-            if (user) {
-                my.userInfo = user;  
-
-                QuickTips();              
-            }
-        });*/
-    }
+    my.userInfo = Cookies.getJSON('SGIUser');
 
     $('.condition input').bootstrapSwitch();
 
@@ -660,7 +643,7 @@ $(function () {
                 $.getJSON('/dnn/desktopmodules/sgi/api/sales/CancelSGISaleValidation?saleId=' + dataItem.numdav, function (result) {
                     if (result) {
                         if (result) {
-                            CancelSale();
+                            cancelSale();
                         } else {
                             var notice = new PNotify({
                                 title: 'Atenção!',
@@ -759,7 +742,7 @@ $(function () {
                                                 amplify.store.sessionStorage(document.location.host + document.location.pathname + document.location.search, true);
                                             }
 
-                                            CancelSale();
+                                            cancelSale();
                                         } else {
                                             var notice4 = new PNotify({
                                                 title: 'Erro!',
@@ -845,7 +828,7 @@ $(function () {
         var grid = $('#salesGrid').data("kendoGrid");
         var dataItem = grid.dataSource.getByUid(my.uId);
 
-        window.location.href = '/venda.html?numDav=' + dataItem.NumDav;
+        window.location.href = '/davs/' + dataItem.numdav + '/' + (dataItem.cod_funcionario || 0);
     });
 
     $('#btnAddFilter').click(function (e) {
@@ -855,7 +838,13 @@ $(function () {
         e.preventDefault();
 
         $('.selectSearchFor select:first').clone().addClass('cloned').appendTo('.selectSearchFor');
+        // $('.selectSearchFor').clone().find('.bootstrap-select:first').replaceWith(function () {
+        //     return $('select', this);
+        // }).appendTo('.selectSearchFor');
         $('.selectConditions select:first').clone().addClass('cloned').appendTo('.selectConditions');
+        // $('.selectConditions').clone().find('.bootstrap-select:first').replaceWith(function () {
+        //     return $('select', this);
+        // }).appendTo('.selectConditions');
         $('.tbSearchFor input:first').clone().addClass('cloned').appendTo('.tbSearchFor').parent().find("input:last").val('');
         $('.tbSearchFor2 input:first').clone().addClass('cloned').appendTo('.tbSearchFor2').parent().find("input:last").val('');
         $('.condition input:first').clone().addClass('cloned').appendTo('.filterButtons .form-group');
@@ -874,7 +863,9 @@ $(function () {
         e.preventDefault();
 
         $('.selectSearchFor select:last').remove();
+        // $('.selectSearchFor').find('.bootstrap-select:last').remove();
         $('.selectConditions select:last').remove();
+        // $('.selectConditions').find('.bootstrap-select:last').remove();
         $('.tbSearchFor input:last').remove();
         $('.tbSearchFor2 input:last').remove();
         $('.bootstrap-switch.cloned:last').remove();
@@ -899,46 +890,16 @@ $(function () {
         salesGrid.dataSource.read();
     });
 
-    $('.selectSearchFor').select2({
-        // placeholder: "",
-        // width: '100%',
-        tags: true,
-        language: "pt-BR",
-        // allowClear: true,
-        // escapeMarkup: function (markup) {
-        //     return markup;
-        // },
-        minimumInputLength: -1,
-        minimumResultsForSearch: -1,
-        // templateResult: function (repo) {
-        //     if (repo.loading) {
-        //         return repo.text;
-        //     }
-        //     var markup = '<option value="' + repo.id + '">' + repo.text + '</option>';
-        //     return markup;
-        // },
-        templateSelection: function (repo) {
-            return repo.text;
-        }
-    });
-
     $.each(salesGrid.columns, function (key, value) {
         if (value.attributes.tag == '1') {
             if (value.field.toLowerCase() == 'data_cadastro') {
                 value.field = 'convert(varchar, d.data_cadastro, 103)';
                 value.title = 'Data Cadastrado';
             }
-            // var newOption = new Option(value.title, value.field, true, true);
-            // $(".selectSearchFor").append(newOption).trigger('change');
-            $(".selectSearchFor")
+            $('.selectSearchFor select')
                 .append($("<option></option>")
                     .attr("value", value.field)
                     .text(value.title));
-            $(".selectSearchFor").trigger("change");
-            // $('.selectSearchFor select')
-            //     .append($("<option></option>")
-            //         .attr("value", value.field)
-            //         .text(value.title));
         }
     });
 
@@ -1012,7 +973,7 @@ function convertSale() {
     });
 }
 
-function CancelSale() {
+function cancelSale() {
 
     var grid = $('#salesGrid').data("kendoGrid");
     var dataItem = grid.dataSource.getByUid(my.uId);
@@ -1095,27 +1056,33 @@ function CancelSale() {
 }
 
 var getNextDay = function () {
-    // $(document).ajaxStart(function () {
-    //     Pace.restart();
-    // });
+    $(document).ajaxStart(function () {
+        Pace.restart();
+    });
     my.today.setDate(my.today.getDate() + 1);
-    $('.selectSearchFor option[value="convert(varchar, d.data_cadastro, 103)"]').attr('selected', 'selected');
-    // $('.selectConditions option[value="between"]').attr('selected', 'selected');
+    $('.selectSearchFor option[value="convert(varchar, d.data_cadastro, 103)"]').attr('selected', true).change();
+    // $('.selectSearchFor').selectpicker('refresh');
+    $('.selectConditions option[value="between"]').attr('selected', true).change();
+    // $('.selectConditions').selectpicker('refresh');
+    // $('.selectConditions').selectpicker('val', 'between');
     $('.tbSearchFor input').val(moment(my.today).format('DD/MM/YYYY'));
-    // $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
+    $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
     $('#salesGrid').data('kendoGrid').dataSource.read();
     return false;
 };
 
 var getPrevDay = function () {
-    // $(document).ajaxStart(function () {
-    //     Pace.restart();
-    // });
+    $(document).ajaxStart(function () {
+        Pace.restart();
+    });
     my.today.setDate(my.today.getDate() - 1);
-    $('.selectSearchFor option[value="convert(varchar, d.data_cadastro, 103)"]').attr('selected', 'selected');
-    // $('.selectConditions option[value="between"]').attr('selected', 'selected');
+    $('.selectSearchFor option[value="convert(varchar, d.data_cadastro, 103)"]').attr('selected', true).change();
+    // $('.selectSearchFor').selectpicker('refresh');
+    $('.selectConditions option[value="between"]').attr('selected', true).change();
+    // $('.selectConditions').selectpicker('refresh');
+    // $('.selectConditions').selectpicker('val', 'between');
     $('.tbSearchFor input').val(moment(my.today).format('DD/MM/YYYY'));
-    // $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
+    $('.tbSearchFor2 input').val(moment(my.today).format('DD/MM/YYYY'));
     $('#salesGrid').data('kendoGrid').dataSource.read();
     return false;
 };

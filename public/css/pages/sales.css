@@ -26,3 +26,6 @@ h6 {
     margin-bottom: 0 !important;
 }
 
+.bootstrap-select span {
+    color: #676767
+}

@@ -24,7 +24,7 @@
         </div>
 
         <div class="pull-right">
-            <span id="saleDate"></span>
+            <span id="saleDate">{{data.data_cadastro}}</span>
         </div>
     </div>
 </div>
@@ -68,16 +68,16 @@
         <div class="form-inline">
             <div class="form-group col-xs-8">
                 <select id="select2Products" class="form-control" tabindex="7" aria-hidden="true" disabled>
-                                        <option></option>
-                                    </select>
+                    <option></option>
+                </select>
             </div>
             <div class="form-group col-xs-4">
                 <div class="input-group">
                     <input id="productQty" type="text" class="form-control" value="1" tabindex="8">
                     <span class="input-group-btn">
-                                            <button id="btnAddProduct" class="btn btn-primary" disabled>
-                                                <span class="glyphicon glyphicon-plus"></span>
-                    </button>
+                        <button id="btnAddProduct" class="btn btn-primary" disabled>
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
                     </span>
                 </div>
             </div>
@@ -163,7 +163,6 @@
 
             <div class="col-md-2 col-xs-12 text-center tile">
                 <label>Total:</label>
-
                 <h3 data-bind="text: 'R$ ' +  totalAmount().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></h3>
             </div>
         </div>
@@ -345,3 +344,27 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var sale = "{{json data}}".replace(/&quot;/g, '"');
+    /*var items = "{{json data.saleitems}}".replace(/&quot;/g, '"');
+    var codcliente = "{{json data.codcliente}}";
+    var ativo = "{{json data.ativo}}";
+    var nomecliente = "{{json data.nomecliente}}".replace(/&quot;/g, '"');
+    var codvendedor = "{{json data.codvendedor}}";
+    var vendedor = "{{json data.vendedor}}".replace(/&quot;/g, '"');
+    var codoperadora = "{{json data.codoperadora}}";
+    var operadora = "{{json data.operadora}}".replace(/&quot;/g, '"');
+    var valordinheiro = "{{json data.valordinheiro}}";
+    var valorcartao = "{{json data.valorcartao}}";
+    var valorcrediario = "{{json data.valorcrediario}}";
+    var valortotal = "{{json data.valortotal}}";
+    var descontoperc = "{{json data.descontoperc}}";
+    var descontovalor = "{{json data.descontovalor}}";
+    var acrescimoreal = "{{json data.acrescimoreal}}";
+    var cheque = "{{json data.cheque}}";
+    var convenio = "{{json data.convenio}}";
+    var orcamento = "{{json data.orcamento}}";
+    var pedido = "{{json data.pedido}}";
+    var condicional = "{{json data.condicional}}";*/
+</script>

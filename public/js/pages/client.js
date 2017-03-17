@@ -7,17 +7,11 @@ $(function () {
     kendo.culture().calendar.firstDay = 1;
 
     my.clientId = document.location.pathname.split('/')[2]; // my.getQuerystring('codigo', my.getStringParameterByName('codigo'));
+
+    my.userInfo = Cookies.getJSON('SGIUser');
+
     // my.orderBy = my.getQuerystring('orderby', my.getStringParameterByName('orderby'));
     // my.orderDir = my.getQuerystring('orderdir', my.getStringParameterByName('orderdir'));
-    my.userInfo = JSON.parse(Cookies.getJSON('SGIUser').replace('j:', ''));
-
-    /*function rotation() {
-        $('.logo-mini').transform({ rotateY: '0' });
-        $('.logo-mini').animate({ rotateY: '360deg' }, 3000, 'linear', function () {
-            rotation();
-        });
-    }
-    rotation();*/
 
     $('#txtBoxBirthDate').daterangepicker({
         autoUpdateInput: false,

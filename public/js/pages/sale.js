@@ -4,83 +4,47 @@ $(function () {
 
     PNotify.prototype.options.styling = "bootstrap3";
 
-    my.viewModel();
-
     my.saleId = document.location.pathname.split('/')[2];
     my.today = new Date();
     my.edidting = false;
 
-    /*function rotation() {
-        $('.logo-mini').transform({ rotateY: '0' });
-        $('.logo-mini').animate({ rotateY: '360deg' }, 3000, 'linear', function () {
-            rotation();
-        });
+    my.userInfo = Cookies.getJSON('SGIUser');
+
+    my.viewModel();
+
+    if (my.saleId > 0) {
+        my.edidting = true;
+
+        getSale();
+    } else {
+        if (my.vm.storeRules().CondPagtoPadrao != '') {
+            $('#select2PayConditions').append($('<option value="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[0]) + '" fee="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[3]) + '" default="true" selected>' + my.vm.storeRules().CondPagtoPadrao.split(',')[1] + '</option>'));
+            $('#select2PayConditions').attr({
+                'fee': my.vm.storeRules().CondPagtoPadrao.split(',')[3],
+                'default': true
+            });
+            $('#select2PayConditions').trigger('change');
+        }
+
+        if (my.vm.storeRules().OperadoraPadrao != '') {
+            $('#select2CardProviders').append($('<option value="' + parseInt(my.vm.storeRules().OperadoraPadrao.split(',')[0]) + '" selected>' + my.vm.storeRules().OperadoraPadrao.split(',')[1] + '</option>'));
+            $('#select2CardProviders').trigger('change');
+        }
+
+        $('#select2Salesmen').val(null);
+        $('#select2Salesmen').append($('<option value="' + parseInt(my.userInfo.SGIID) + '" selected>' + my.userInfo.Employee + '</option>'));
+        $('#select2Salesmen').trigger("change");
+
+        my.vm.totalPercDiscount(0.00);
+
+        $('input:radio[name=saleType]').focus();
     }
-    rotation();*/
-
-    if (my.userInfo === undefined) {
-        my.userInfo = $.parseJSON(Cookies.getJSON('SGIUser').replace('j:', ''))
-        /*$.get('/api/getUserInfo', function (user) {
-            if (user) {
-                my.userInfo = user;  
-
-                QuickTips();              
-            }
-        });*/
-    }
-
-    // if (amplify.store.sessionStorage(document.location.host + "_user_loggedin") > 0) {
-
-    //     my.userInfo = JSON.parse(amplify.store.sessionStorage(document.location.host + "_user"));
-
-    //     my.admin = my.userInfo.Adm;
-
-    //     $('.overlay').remove();
-
-    //     $.get('/dnn/desktopmodules/sgi/api/services/UserAuthenticated', function (auth) {
-    //         if (auth) {
-
-    //             amplify.store.sessionStorage(document.location.host + "_storeRules", auth);
-    //             my.vm.storeRules(auth);
-
-    //             if (my.saleId > 0) {
-    //                 my.edidting = true;
-    //                 getSale(my.saleId);
-    //             } else {
-    //                 if (my.vm.storeRules().CondPagtoPadrao != '') {
-    //                     $('#select2PayConditions').append($('<option value="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[0]) + '" fee="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[3]) + '" default="true" selected>' + my.vm.storeRules().CondPagtoPadrao.split(',')[1] + '</option>'));
-    //                     $('#select2PayConditions').attr({ 'fee': my.vm.storeRules().CondPagtoPadrao.split(',')[3], 'default': true });
-    //                     $('#select2PayConditions').trigger('change');
-    //                 }
-
-    //                 if (my.vm.storeRules().OperadoraPadrao != '') {
-    //                     $('#select2CardProviders').append($('<option value="' + parseInt(my.vm.storeRules().OperadoraPadrao.split(',')[0]) + '" selected>' + my.vm.storeRules().OperadoraPadrao.split(',')[1] + '</option>'));
-    //                     $('#select2CardProviders').trigger('change');
-    //                 }
-
-    //                 $('#select2Salesmen').val(null);
-    //                 $('#select2Salesmen').append($('<option value="' + parseInt(my.userInfo.SGIID) + '" selected>' + my.userInfo.Employee + '</option>'));
-    //                 $('#select2Salesmen').trigger("change");
-
-    //                 my.vm.totalPercDiscount(0.00);
-    //             }
-
-    //             $('input:radio[name=saleType]').focus();
-
-    //             window.setInterval("keepSessionAlive()", 900000);
-    //         } else {
-    //             window.location.href = '/login.html';
-    //         }
-    //     });
-    // } else {
-    //     window.location.href = '/login.html';
-    // }
 
     $('#select2Clients').select2({
         placeholder: "Informe o código, nome, fantasia ou cpf/cnpj",
         width: '100%',
         language: "pt-BR",
-        allowClear: true,
+        // allowClear: true,
         ajax: {
             url: "/dnn/desktopmodules/sgi/api/people/GetSGIPeople",
             dataType: 'json',
@@ -1477,22 +1441,9 @@ $(function () {
         }
         e.preventDefault();
 
-        //amplify.store.sessionStorage(document.location.host + "_saleType", null);
         amplify.store.sessionStorage(document.location.host + "_client", null);
-        //amplify.store.sessionStorage(document.location.host + "_selectedCondition", null);
-        //amplify.store.sessionStorage(document.location.host + "_salesman", null);
-        //amplify.store.sessionStorage(document.location.host + "_otherPays", null);
-        //amplify.store.sessionStorage(document.location.host + "_cardProviders", null);
-        //amplify.store.sessionStorage(document.location.host + "_saleComments", null);
-        //amplify.store.sessionStorage(document.location.host + '_products', null);
-        //amplify.store.sessionStorage(document.location.host + document.location.pathname + document.location.search, null);
-        //amplify.store.sessionStorage(document.location.host + "_totalPercDiscount", null);
-        //amplify.store.sessionStorage(document.location.host + "_totalDiscount", null);
-        //amplify.store.sessionStorage(document.location.host + '_totalPayCash', null);
-        //amplify.store.sessionStorage(document.location.host + '_totalPayCard', null);
-        //amplify.store.sessionStorage(document.location.host + '_totalPayCred', null);
 
-        window.location.href = '/vendas.html';
+        window.location.href = '/davs';
     });
 
     $('#txtBoxTotalDiscount').on('focusin', function () {
@@ -1614,316 +1565,114 @@ $(function () {
 
     moment.locale("pt-br");
 
-    //$('#textAreaComments').focusout(function () {
-    //    amplify.store.sessionStorage(document.location.host + "_saleComments", $('#textAreaComments').val());
-    //});
-
-    //if (my.storage) {
-    //    if (my.saleId === '') {
-    //        if (amplify.store.sessionStorage(document.location.host + "_saleType")) {
-    //            $('input:radio[name=saleType]:nth(' + (parseInt(amplify.store.sessionStorage(document.location.host + "_saleType")) - 1) + ')').prop("checkd", true);
-    //        }
-
-    //        var client = amplify.store.sessionStorage(document.location.host + "_client");
-    //        if (client) {
-    //            $('#select2Clients').append($('<option value="' + client.id + '" active="' + client.active + '" selected>' + client.name + '</option>'));
-    //            $('#select2Clients').trigger("change");
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + "_selectedCondition")) {
-    //            var condition = amplify.store.sessionStorage(document.location.host + "_selectedCondition");
-    //            $('#select2PayConditions').append($('<option value="' + condition.id + '" default="' + condition.default + '" interval="' + condition.interval + '" selected>' + condition.name + '</option>'));
-    //            $('#select2PayConditions').attr({ 'default': condition.default, 'interval': condition.interval });
-    //            $('#select2PayConditions').trigger("change");
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + "_salesman")) {
-    //            var salesman = amplify.store.sessionStorage(document.location.host + "_salesman");
-    //            $('#select2Salesmen').append($('<option value="' + salesman.id + '" selected>' + salesman.name + '</option>'));
-    //            $('#select2Salesmen').trigger("change");
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + "_otherPays")) {
-    //            var otherPays = amplify.store.sessionStorage(document.location.host + "_otherPays");
-    //            $('#selectCCC').append($('<option value="' + otherPays.id + '" selected>' + otherPays.name + '</option>'));
-    //            $('#selectCCC').trigger("change");
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + "_cardProviders")) {
-    //            var cardProviders = amplify.store.sessionStorage(document.location.host + "_cardProviders");
-    //            $('#select2CardProviders').append($('<option value="' + cardProviders.id + '" selected>' + cardProviders.name + '</option>'));
-    //            $('#select2CardProviders').trigger("change");
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + "_saleComments")) {
-    //            $('#textAreaComments').val(amplify.store.sessionStorage(document.location.host + "_saleComments"));
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + '_products')) {
-    //            // convert item from stoage to json
-    //            var products = ko.utils.parseJson(amplify.store.sessionStorage(document.location.host + '_products'));
-    //            $.each(products, function (i, p) {
-    //                my.vm.selectedProducts.unshift(new my.Product()
-    //                    .productId(p.productId)
-    //                    .itemType(p.itemType)
-    //                    .onSpecial(p.onSpecial)
-    //                    .onSpecialQty(p.onSpecialQty)
-    //                    .discountOnResale(p.discountOnResale)
-    //                    .discountPrice(parseFloat(p.discountPrice))
-    //                    .bulkPrice(p.bulkPrice)
-    //                    .bulkDiscountQty(p.bulkDiscountQty)
-    //                    .productName(p.productName)
-    //                    .qTy(parseFloat(p.qTy).toFixed(2))
-    //                    .qTyStock(p.qTyStock)
-    //                    .cost(p.cost)
-    //                    .discount(parseFloat(p.discount).toFixed(2))
-    //                    .price(p.price)
-    //                    .totalValue((p.price * p.qTy) - (p.qTy * p.price) * p.discount / 100));
-
-    //                my.vm.saleItems.push(new my.Product().productId(p.productId));
-    //            });
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + '_totalPayCash')) {
-    //            my.vm.totalCash(parseFloat(amplify.store.sessionStorage(document.location.host + '_totalPayCash')));
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + '_totalPayCard')) {
-    //            my.vm.totalCard(parseFloat(amplify.store.sessionStorage(document.location.host + '_totalPayCard')));
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + '_totalPayCred')) {
-    //            my.vm.totalCred(parseFloat(amplify.store.sessionStorage(document.location.host + '_totalPayCred')));
-    //        }
-
-    //        if (amplify.store.sessionStorage(document.location.host + "_totalDiscount")) {
-    //            $('#txtBoxTotalDiscount').val(amplify.store.sessionStorage(document.location.host + "_totalDiscount"));
-    //            my.vm.totalDiscount(parseFloat($('#txtBoxTotalDiscount').val()));
-    //            setTimeout(function () {
-    //                my.vm.totalPercDiscount((my.vm.totalDiscount() * 100) / my.vm.extendedPrice());
-    //            }, 1000);
-    //        }
-    //    } else {
-    //        amplify.store.sessionStorage(document.location.host + "_saleType", null);
-    //        amplify.store.sessionStorage(document.location.host + "_client", null);
-    //        amplify.store.sessionStorage(document.location.host + "_selectedCondition", null);
-    //        amplify.store.sessionStorage(document.location.host + "_salesman", null);
-    //        amplify.store.sessionStorage(document.location.host + "_otherPays", null);
-    //        amplify.store.sessionStorage(document.location.host + "_cardProviders", null);
-    //        amplify.store.sessionStorage(document.location.host + "_saleComments", null);
-    //        amplify.store.sessionStorage(document.location.host + '_products', null);
-    //        amplify.store.sessionStorage(document.location.host + document.location.pathname + document.location.search, null);
-    //        amplify.store.sessionStorage(document.location.host + "_totalPercDiscount", null);
-    //        amplify.store.sessionStorage(document.location.host + "_totalDiscount", null);
-    //        amplify.store.sessionStorage(document.location.host + '_totalPayCash', null);
-    //        amplify.store.sessionStorage(document.location.host + '_totalPayCard', null);
-    //        amplify.store.sessionStorage(document.location.host + '_totalPayCred', null);
-    //    }
-    //}
-
 });
 
-function getSale(saleId) {
+function getSale() {
 
-    $.ajax({
-        url: '/dnn/desktopmodules/sgi/api/sales/GetSGISale?saleId=' + saleId + '&sgiId=' + my.userInfo.SGIID
-    }).done(function (data) {
-        if (data) {
+    var dav = JSON.parse(sale);
 
-            var $radios = $('input:radio[name=saleType]');
-            $radios.prop('disabled', true)
+    var $radios = $('input:radio[name=saleType]');
+    $radios.prop('disabled', true);
 
-            if (data.SaleItems.length > 0) {
-                my.vm.selectedProducts.removeAll();
-                $.each(data.SaleItems, function (i, item) {
-                    my.vm.selectedProducts.push(new my.Product()
-                        .productId(item.CodProduto)
-                        .productName(item.Nome)
-                        .discount(item.DescontoPerc)
-                        .price(item.ValorUnitario)
-                        .qTy(item.Quantidade)
-                        .qTyStock(item.Estoque)
-                        .totalValue(item.ValorTotal)
-                        .saleItemId(item.Codigo));
-                });
-            }
+    if (dav.saleitems.length > 0) {
+        my.vm.selectedProducts.removeAll();
+        $.each(dav.saleitems, function (i, item) {
+            my.vm.selectedProducts.push(new my.Product()
+                .productId(item.codproduto)
+                .productName(item.nome)
+                .discount(item.descontoperc)
+                .price(item.valorunitario)
+                .qTy(item.quantidade)
+                .qTyStock(item.estoque)
+                .totalValue(item.valortotal)
+                .saleItemId(item.codigo));
+        });
+    }
 
-            $('#saleDate').html(moment(new Date(data.Data_Cadastro)).format('LLL'));
+    $('#saleDate').html(moment(new Date($('#saleDate').text())).format('LLL'));
 
-            $('#select2Clients').append($('<option value="' + data.CodCliente + '" active="' + data.Ativo + '" selected>' + data.NomeCliente + '</option>'));
-            $('#select2Clients').attr({
-                'active': data.Ativo
-            });
-            $('#select2Clients').trigger('change');
+    $('#select2Clients').append($('<option value="' + dav.codcliente + '" active="' + dav.ativo + '" selected>' + dav.nomecliente + '</option>'));
+    // $('#select2Clients').attr({
+    //     'active': JSON.parse(ativo)
+    // });
+    $('#select2Clients').trigger('change');
 
-            $('#select2Salesmen').append($('<option value="' + data.CodVendedor + '" selected>' + data.Vendedor + '</option>'));
-            $('#select2Salesmen').trigger("change");
+    $('#select2Salesmen').append($('<option value="' + dav.codvendedor + '" selected>' + dav.vendedor + '</option>'));
+    $('#select2Salesmen').trigger("change");
 
-            if (data.CodCondPagto > 0) {
-                $('#select2PayConditions').append($('<option value="' + data.CodCondPagto + '" selected>' + data.CondPagto + '</option>'));
-                $('#select2PayConditions').trigger("change");
-                if (data.Acrescimo > 0) {
-                    my.vm.feePerc(data.Acrescimo);
-                    my.vm.feeValue(data.AcrescimoReal);
-                }
-                //} else {
-                //    if (my.vm.storeRules().CondPagtoPadrao != '') {
-                //        $('#select2PayConditions').append($('<option value="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[0]) + '" fee="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[3]) + '" default="true" selected>' + my.vm.storeRules().CondPagtoPadrao.split(',')[1] + '</option>'));
-                //        $('#select2PayConditions').attr({ 'fee': my.vm.storeRules().CondPagtoPadrao.split(',')[3], 'default': true });
-                //        $('#select2PayConditions').trigger('change');
-                //    }
-            }
+    if (dav.codoperadora > 0) {
+        $('#select2CardProviders').append($('<option value="' + dav.odoperadora + '" selected>' + dav.operadora + '</option>'));
+        $('#select2CardProviders').trigger("change");
+    }
 
-            if (data.CodOperadora > 0) {
-                $('#select2CardProviders').append($('<option value="' + data.CodOperadora + '" selected>' + data.Operadora + '</option>'));
-                $('#select2CardProviders').trigger("change");
-            }
+    $('#select2Products').attr('disabled', false);
 
-            $('#select2Products').attr('disabled', false);
+    if (dav.valordinheiro > 0) {
+        my.vm.totalCash(dav.valordinheiro);
+    }
 
-            if (data.ValorDinheiro > 0) {
-                my.vm.totalCash(data.ValorDinheiro);
-            }
+    if (dav.valorcartao > 0) {
+        my.vm.totalCard(dav.valorcartao);
+    }
 
-            if (data.ValorCartao > 0) {
-                my.vm.totalCard(data.ValorCartao);
-            }
+    if (dav.valorcrediario > 0) {
+        my.vm.totalCred(dav.valorcrediario);
+    }
 
-            if (data.ValorCrediario > 0) {
-                my.vm.totalCred(data.ValorCrediario);
-            }
+    if ((my.vm.totalCash() + my.vm.totalCard() + my.vm.totalCred()) == 0) {
+        my.vm.totalCash(dav.valortotal);
+    }
 
-            if ((my.vm.totalCash() + my.vm.totalCard() + my.vm.totalCred()) == 0) {
-                my.vm.totalCash(data.ValorTotal);
-            }
+    my.vm.totalDiscount(0.00);
+    my.vm.totalPercDiscount(0.00);
 
-            my.vm.totalDiscount(0.00);
-            my.vm.totalPercDiscount(0.00);
+    if (dav.descontovalor !== 0) {
+        my.vm.totalPercDiscount(dav.descontoperc.toFixed(2));
+        my.vm.totalDiscount(dav.descontovalor.toFixed(2));
+    }
 
-            if (data.DescontoValor !== 0) {
-                my.vm.totalPercDiscount(data.DescontoPerc.toFixed(2));
-                my.vm.totalDiscount(data.DescontoValor.toFixed(2));
-                //my.vm.totalDiscount((data.DescontoPerc * data.ValorTotal) / 100);
-                //my.vm.totalPercDiscount(data.DescontoPerc);
-            }
+    if (dav.acrescimoreal > 0) {
+        my.vm.feeValue(dav.acrescimoreal);
+        $('#lblBoxTotal').text('R$ ' + (my.vm.totalAmount() + my.vm.feeValue()).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })).parent().removeClass('hidden');
+    }
 
-            if (data.AcrescimoReal > 0) {
-                my.vm.feeValue(data.AcrescimoReal);
-                $('#lblBoxTotal').text('R$ ' + (my.vm.totalAmount() + my.vm.feeValue()).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })).parent().removeClass('hidden');
-            }
-
-            if (data.ValorCrediario > 0) {
-                if (data.Cheque) {
-                    $('#selectCCC').val('5');
-                } else {
-                    $('#selectCCC').val('2');
-                }
-                if (data.Convenio) {
-                    $('#selectCCC').val('3');
-                }
-                $('#selectCCC').trigger("change");
-            }
-
-            if (data.Orcamento) {
-                //$('input[name=saleType]:eq(0)').attr({ 'selected': true });
-                $radios.filter('[value=1]').prop('checked', true);
-            }
-
-            if (data.Pedido) {
-                $radios.filter('[value=2]').prop('checked', true);
-            }
-
-            if (data.Condicional) {
-                $radios.filter('[value=3]').prop('checked', true);
-            }
-
-            if ((!data.Orcamento) && (!data.Pedido) && (!data.Condicional)) {
-                $radios.filter('[value=4]').prop('checked', true);
-            }
-
-            if (data.Impresso && (!(!data.Ocamento) && data.Status !== 3) && (data.Cod_Funcionario !== my.userInfo.SGIID || (!my.userInfo.Adm))) {
-                var notice = new PNotify({
-                    title: 'Atenção!',
-                    text: 'Este orçamento já foi impresso e não deve ser editado.',
-                    type: 'info',
-                    addclass: 'stack-bottomright',
-                    stack: my.stack_bottomright,
-                    history: {
-                        menu: true,
-                        labels: {
-                            redisplay: "Mostrar",
-                            all: "Todos",
-                            last: "Último"
-                        }
-                    }
-                });
-                notice.get().click(function () {
-                    notice.remove();
-                });
-            }
-
-            $('#textAreaComments').val(data.Observacao);
-
-            $('#btnFinalize').html('Salvar');
-
-            if (((!data.Ocamento) && data.Status !== 3) && (data.Cod_Funcionario !== my.userInfo.SGIID || (!my.userInfo.Adm))) {
-                var notice1 = new PNotify({
-                    title: 'Atenção!',
-                    text: 'Este DAV não pode ser editado.',
-                    type: 'warning',
-                    addclass: 'stack-bottomright',
-                    stack: my.stack_bottomright,
-                    history: {
-                        menu: true,
-                        labels: {
-                            redisplay: "Mostrar",
-                            all: "Todos",
-                            last: "Último"
-                        }
-                    }
-                });
-                notice1.get().click(function () {
-                    notice1.remove();
-                });
-                $('#btnFinalize').attr({
-                    'disabled': true
-                });
-                $("#select2Clients").prop("disabled", true);
-                $("#select2Products").prop("disabled", true);
-            } else {
-                ValidateCliente(data.CodCliente);
-            }
-
+    if (dav.valorcrediario > 0) {
+        if (dav.cheque) {
+            $('#selectCCC').val('5');
         } else {
-            var notice2 = new PNotify({
-                title: 'Atenção!',
-                text: 'Não foi possível carregar o DAV.',
-                type: 'error',
-                addclass: 'stack-bottomright',
-                stack: my.stack_bottomright,
-                history: {
-                    menu: true,
-                    labels: {
-                        redisplay: "Mostrar",
-                        all: "Todos",
-                        last: "Último"
-                    }
-                }
-            });
-            notice2.get().click(function () {
-                notice2.remove();
-            });
+            $('#selectCCC').val('2');
         }
+        if (dav.convenio) {
+            $('#selectCCC').val('3');
+        }
+        $('#selectCCC').trigger("change");
+    }
 
-    }).fail(function (jqXHR, textStatus) {
-        console.log(jqXHR.responseText);
-        var notice3 = new PNotify({
+    if (dav.orcamento) {
+        //$('input[name=saleType]:eq(0)').attr({ 'selected': true });
+        $radios.filter('[value=1]').prop('checked', true);
+    }
+
+    if (dav.pedido) {
+        $radios.filter('[value=2]').prop('checked', true);
+    }
+
+    if (dav.condicional) {
+        $radios.filter('[value=3]').prop('checked', true);
+    }
+
+    if ((!dav.orcamento) && (!dav.pedido) && (!dav.condicional)) {
+        $radios.filter('[value=4]').prop('checked', true);
+    }
+
+    if (dav.impresso && (!(!dav.ocamento) && dav.status !== 3) && (dav.cod_funcionario !== my.userInfo.sgiid || (!my.userInfo.admin))) {
+        var notice = new PNotify({
             title: 'Atenção!',
-            text: 'Erro ao tentar completar a ação.',
-            type: 'error',
+            text: 'Este orçamento já foi impresso e não deve ser editado.',
+            type: 'info',
             addclass: 'stack-bottomright',
             stack: my.stack_bottomright,
             history: {
@@ -1935,10 +1684,43 @@ function getSale(saleId) {
                 }
             }
         });
-        notice3.get().click(function () {
-            notice3.remove();
+        notice.get().click(function () {
+            notice.remove();
         });
-    });
+    }
+
+    $('#textAreaComments').val(dav.observacao);
+
+    $('#btnFinalize').html('Salvar');
+
+    if (((!dav.ocamento) && dav.status !== 3) && (dav.cod_funcionario !== my.userInfo.sgiid || (!my.userInfo.admin))) {
+        var notice1 = new PNotify({
+            title: 'Atenção!',
+            text: 'Este DAV não pode ser editado.',
+            type: 'warning',
+            addclass: 'stack-bottomright',
+            stack: my.stack_bottomright,
+            history: {
+                menu: true,
+                labels: {
+                    redisplay: "Mostrar",
+                    all: "Todos",
+                    last: "Último"
+                }
+            }
+        });
+        notice1.get().click(function () {
+            notice1.remove();
+        });
+        $('#btnFinalize').attr({
+            'disabled': true
+        });
+        $("#select2Clients").prop("disabled", true);
+        $("#select2Products").prop("disabled", true);
+    } else {
+        ValidateCliente(dav.codcliente);
+    }
+
 }
 
 function RegisterSale() {
@@ -2061,38 +1843,6 @@ function RegisterSale() {
         notice2.get().click(function () {
             notice2.remove();
         });
-    });
-}
-
-function keepSessionAlive() {
-    $.get('/dnn/desktopmodules/sgi/api/services/UserAuthenticated', function (auth) {
-        if (auth) {
-            console.log('renewing session with the server...');
-        } else {
-            $('.user-panel a').html('<i class="fa fa-circle text-danger"></i> Offline');
-            $('.user-menu a span').text('OFFLINE');
-            amplify.store.sessionStorage(document.location.host + "user", null);
-            amplify.store.sessionStorage(document.location.host + "user_loggedin", null);
-            var notice = new PNotify({
-                title: 'Atenção!',
-                text: 'Você não está logado no sistema.',
-                type: 'error',
-                addclass: 'stack-bottomright',
-                stack: my.stack_bottomright,
-                history: {
-                    menu: true,
-                    labels: {
-                        redisplay: "Mostrar",
-                        all: "Todos",
-                        last: "Último"
-                    }
-                }
-            });
-            notice.get().click(function () {
-                window.location.href = 'login.html?next=' + document.location.pathname + document.location.search;
-            });
-            console.log('No one is logged in to the server...');
-        }
     });
 }
 
