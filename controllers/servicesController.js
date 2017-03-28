@@ -332,3 +332,32 @@ exports.removeTelephone = function (req, res, id) {
         res.send(ex);
     }
 };
+
+exports.getStoreSettings = function (req, res) {
+    try {
+        var sqlInst = "select top 1 * from parametros_sistema";
+
+        db.querySql(sqlInst,
+            function (data, err) {
+                if (err) {
+                    res.writeHead(500, "Internal Server Error", {
+                        "Content-Type": "text/html"
+                    });
+                    res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+
+                    res.end();
+                } else {
+                    res.writeHead(200, {
+                        "Content-Type": "application/json"
+                    });
+                    res.write(JSON.stringify(data).replace(/"([\w]+)":/g, function ($0, $1) {
+                        return ('"' + $1.toLowerCase() + '":');
+                    }));
+
+                    res.end();
+                }
+            });
+    } catch (ex) {
+        res.send(ex);
+    }
+};

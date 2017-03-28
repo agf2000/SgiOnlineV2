@@ -1,6 +1,17 @@
 var db = require("../core/db");
 var util = require("util");
 
+/**
+ * gets clients only
+ * 
+ * @param {any} req 
+ * @param {any} res 
+ * @param {string} orderBy 
+ * @param {string} orderDir 
+ * @param {int} pageIndex 
+ * @param {int} pageSize 
+ * @param {string} searchFor 
+ */
 exports.getClients = function (req, res, orderBy, orderDir, pageIndex, pageSize, searchFor) {
     try {
         switch (orderBy) {
@@ -30,7 +41,7 @@ exports.getClients = function (req, res, orderBy, orderDir, pageIndex, pageSize,
                     res.writeHead(500, "Internal Server Error", {
                         "Content-Type": "text/html"
                     });
-                    res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                    res.write(err.toString());
 
                     res.end();
                 } else {
@@ -74,7 +85,7 @@ exports.getClient = function (req, res, id, orderBy, orderDir) {
                     res.writeHead(500, "Internal Server Error", {
                         "Content-Type": "text/html"
                     });
-                    res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                    res.write(err.toString());
 
                     res.end();
                 } else {
@@ -151,7 +162,7 @@ exports.addClient = function (req, res, reqBody) {
                         res.writeHead(500, "Internal Server Error", {
                             "Content-Type": "text/html"
                         });
-                        res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                        res.write(err.toString());
 
                         res.end();
                     } else {
@@ -204,7 +215,7 @@ exports.updateClient = function (req, res, reqBody) {
                         res.writeHead(500, "Internal Server Error", {
                             "Content-Type": "text/html"
                         });
-                        res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                        res.write(err.toString());
 
                         res.end();
                     } else {
@@ -232,7 +243,7 @@ exports.removeClient = function (req, res, id) {
                     res.writeHead(500, "Internal Server Error", {
                         "Content-Type": "text/html"
                     });
-                    res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                    res.write(err.toString());
 
                     res.end();
                 } else {
@@ -264,7 +275,7 @@ exports.validateUser = function (req, res, reqBody) {
                     res.writeHead(500, "Internal Server Error", {
                         "Content-Type": "text/html"
                     });
-                    res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                    res.write(err.toString());
 
                     res.end();
                 } else {
@@ -293,7 +304,7 @@ exports.getTelephones = function (req, res, clientId) {
                     res.writeHead(500, "Internal Server Error", {
                         "Content-Type": "text/html"
                     });
-                    res.write("<html><title>500</title><body>500: Internal Server Error. Details: " + err + "</body></html>");
+                    res.write(err.toString());
 
                     res.end();
                 } else {
@@ -307,6 +318,59 @@ exports.getTelephones = function (req, res, clientId) {
                     res.end();
                 }
             });
+    } catch (ex) {
+        res.send(ex);
+    }
+};
+
+/**
+ * Gets people by type
+ * 
+ * @param {any} req 
+ * @param {any} res
+ * @param {string} orderBy
+ * @param {string} orderDir
+ * @param {number} type 
+ * @param {number} pageIndex 
+ * @param {number} pageSize 
+ * @param {string} searchFor 
+ */
+exports.getPeople = function (req, res, type, orderBy, orderDir, pageIndex, pageSize, searchFor) {
+    try {
+        var sqlInst = "select top(" + pageSize + ") * from (select rowid = row_number() over (order by " + orderBy + " " + orderDir + "), " +
+            "c.*, enderecocompleto = (select top 1 upper(dbo.asstring(v.tipo_logradouro) + ': ' + dbo.asstring(v.logradouro) + ', " +
+            "nº' + dbo.asstring(c.numero) + ' - bairro: ' + dbo.asstring(v.bairro) + ' - ' + dbo.asstring(v.cidade)) " +
+            "from view_endereco_completo v where v.codigo = c.cep), " +
+            "telefone = (select top 1 telefone from telefone where pessoa = c.codigo and padrao = 1), " +
+            "contato = (select top 1 contato from telefone where padrao = 1 and pessoa = c.codigo), " +
+            "totalRows = count(*) over() from pessoas c " +
+            "where tipo = " + type + searchFor + ") a where a.rowid > ((" + pageIndex + " - 1) * " + pageSize + ")";
+        sqlInst += "select count(*) as recordstotal from cliente where tipo = " + type + searchFor;
+
+        db.querySql(sqlInst,
+            function (data, err) {
+                if (err) {
+                    res.writeHead(500, "Internal Server Error", {
+                        "Content-Type": "text/html"
+                    });
+                    res.write(err.toString());
+
+                    res.end();
+                } else {
+                    res.writeHead(200, {
+                        "Content-Type": "application/json"
+                    });
+
+                    var result = {
+                        "recordsTotal": data[1][0].recordstotal,
+                        "data": data[0]
+                    };
+
+                    res.write(JSON.stringify(result));
+
+                    res.end();
+                }
+            }, true);
     } catch (ex) {
         res.send(ex);
     }

@@ -1,14 +1,15 @@
 var express = require("express");
+var jsonData = require("../data/jsonData.json");
+var users = require("../data/users.json");
 var productsController = require("../controllers/productsController");
-var clientsController = require("../controllers/clientsController");
+var peopleController = require("../controllers/peopleController");
 var servicesController = require("../controllers/servicesController");
 var salesController = require("../controllers/salesController");
-var jsonData = require("../data/jsonData");
 
 var router = express.Router();
 
 router.get("/getUserInfo", function (req, res) {
-	res.json(res.locals.user);
+	res.json(users);
 });
 
 router.get('/getProducts', function (req, res) {
@@ -20,23 +21,23 @@ router.get('/getProduct/:productId/:orderBy/:orderDir', function (req, res) {
 });
 
 router.get('/getClients', function (req, res) {
-	clientsController.getClients(req, res, req.query.orderBy, req.query.orderDir, req.query.pageIndex, req.query.pageSize, req.query.searchFor);
+	peopleController.getClients(req, res, req.query.orderBy, req.query.orderDir, req.query.pageIndex, req.query.pageSize, req.query.searchFor);
 });
 
 router.get('/getClient', function (req, res) {
-	clientsController.getClient(req, res, req.query.id, (req.query.orderBy || "codigo"), (req.query.orderDir || "desc"));
+	peopleController.getClient(req, res, req.query.id, (req.query.orderBy || "codigo"), (req.query.orderDir || "desc"));
 });
 
 router.get('/removeClient/:id', function (req, res) {
-	clientsController.removeClient(req, res, req.params.id);
+	peopleController.removeClient(req, res, req.params.id);
 });
 
 router.post('/validateUser', function (req, res) {
-	clientsController.validateUser(req, res, req.body);
+	peopleController.validateUser(req, res, req.body);
 });
 
 router.get('/getTelephones/:clientId', function (req, res) {
-	clientsController.getTelephones(req, res, req.params.clientId);
+	peopleController.getTelephones(req, res, req.params.clientId);
 });
 
 router.get('/getAddress/:postalCode', function (req, res) {
@@ -72,11 +73,11 @@ router.get('/getCities/:filter', function (req, res) {
 });
 
 router.post('/saveClient', function (req, res) {
-	clientsController.addClient(req, res, req.body);
+	peopleController.addClient(req, res, req.body);
 });
 
 router.put('/saveClient', function (req, res) {
-	clientsController.updateClient(req, res, req.body);
+	peopleController.updateClient(req, res, req.body);
 });
 
 router.post('/saveTelephone', function (req, res) {
@@ -101,6 +102,15 @@ router.get('/getSaleItems', function (req, res) {
 
 router.get('/getSale/:saleId/:sgiId', function (req, res) {
 	salesController.getSale(req, res, req.query.saleId, req.query.sgiId);
+});
+
+router.get('/getStoreSettings', function (req, res) {
+	servicesController.getStoreSettings(req, res);
+});
+
+router.get('/getPeople', function (req, res) {
+	peopleController.getPeople(req, res, (req.query.type || 1), (req.query.orderBy || 'nome'),
+		(req.query.orderDir || 'ASC'), (req.query.pageIndex || 1), (req.query.pageSize || 10), req.query.searchFor);
 });
 
 module.exports = router;

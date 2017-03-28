@@ -283,7 +283,7 @@ my.viewModel = function () {
                         return false;
                     }
 
-                    if (my.vm.storeRules().BloqPrecoMenorQueCusto && (item.cost() > item.price())) {
+                    if (my.userInfo.storeRules.bloqprecomenorquecusto && (item.cost() > item.price())) {
                         new PNotify({
                             title: 'Atenção!',
                             text: 'O preço indicado está abaixo do permitido!',
@@ -295,7 +295,7 @@ my.viewModel = function () {
                         return false;
                     }
 
-                    if (originalPrice() > 0 && (item.price() < originalPrice()) && (my.vm.storeRules().NaoPermitirReduzirPreco || my.vm.storeRules().BloqPrecoMenorQueCusto)) {
+                    if (originalPrice() > 0 && (item.price() < originalPrice()) && (my.userInfo.storeRules.naopermitirreduzirpreco || my.userInfo.storeRules.bloqprecomenorquecusto)) {
                         new PNotify({
                             title: 'Atenção!',
                             text: 'O preço indicado está abaixo do permitido!',
@@ -322,7 +322,7 @@ my.viewModel = function () {
                     }
                 } else {
 
-                    if (my.vm.storeRules().NaoPermitirReduzirPreco || my.vm.storeRules().BloqPrecoMenorQueCusto) {
+                    if (my.userInfo.storeRules.naopermitirreduzirpreco || my.userInfo.storeRules.bloqprecomenorquecusto) {
                         originalPrice(item.price());
                     }
 
@@ -370,13 +370,13 @@ my.viewModel = function () {
                     my.vm.totalCred(0);
                     my.vm.totalCash(0);
 
-                    if (my.vm.storeRules().CondPagtoPadrao != '') {
+                    if (my.userInfo.storeRules.condpagtopadrao != '') {
                         $('#select2PayConditions').select2('val', null);
-                        $('#select2PayConditions').append($('<option value="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[0]) + '" fee="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[3]) + '" default="true" selected>' + my.vm.storeRules().CondPagtoPadrao.split(',')[1] + '</option>'));
-                        $('#select2PayConditions').attr({ 'fee': my.vm.storeRules().CondPagtoPadrao.split(',')[3], 'default': true });
+                        $('#select2PayConditions').append($('<option value="' + parseInt(my.userInfo.storeRules.condpagtopadrao.split(',')[0]) + '" fee="' + parseInt(my.userInfo.storeRules.condpagtopadrao.split(',')[3]) + '" default="true" selected>' + my.userInfo.storeRules.condpagtopadrao.split(',')[1] + '</option>'));
+                        $('#select2PayConditions').attr({ 'fee': my.userInfo.storeRules.condpagtopadrao.split(',')[3], 'default': true });
                         $('#select2PayConditions').trigger('change');
-                        if (parseFloat(my.vm.storeRules().CondPagtoPadrao.split(',')[3])) {
-                            my.vm.feePerc(parseFloat(my.vm.storeRules().CondPagtoPadrao.split(',')[3]));
+                        if (parseFloat(my.userInfo.storeRules.condpagtopadrao.split(',')[3])) {
+                            my.vm.feePerc(parseFloat(my.userInfo.storeRules.condpagtopadrao.split(',')[3]));
                         } else {
                             my.vm.feePerc(0);
                         }
@@ -479,8 +479,8 @@ my.viewModel = function () {
             }
         }
 
-        if (my.vm.storeRules()) {
-            if (my.vm.storeRules().UsarDescMaximo) {
+        if (my.userInfo.storeRules) {
+            if (my.userInfo.storeRules.usardescmaximo) {
                 var totalDiscounts = 0,
                     subTotal = 0,
                     grandTotal = 0;
@@ -491,7 +491,7 @@ my.viewModel = function () {
 
                 //totalDiscounts = (parseFloat(grandTotal) - parseFloat(subTotal));
 
-                if ((my.userInfo.DeptBlockedDiscount != '' && ((totalDiscounts > 0 || my.vm.totalDiscount() > 0) && (totalDiscounts + my.vm.totalDiscount()) > parseFloat(((my.vm.storeRules().DescontoMaximo * grandTotal) / 100).toFixed(2))))) {
+                if ((my.userInfo.DeptBlockedDiscount != '' && ((totalDiscounts > 0 || my.vm.totalDiscount() > 0) && (totalDiscounts + my.vm.totalDiscount()) > parseFloat(((my.userInfo.storeRules.descontomaximo * grandTotal) / 100).toFixed(2))))) {
                     if ((!my.userInfo.Adm || my.vm.adminPassword()) && my.vm.selectedProducts().length > 0) {
 
                         BootstrapDialog.show({
@@ -638,7 +638,7 @@ my.viewModel = function () {
                         });
                     }
                 } else {
-                    if (((totalDiscounts > 0 || my.vm.totalDiscount() > 0) && (totalDiscounts + my.vm.totalDiscount()) > parseFloat(((my.vm.storeRules().DescontoMaximo * grandTotal) / 100).toFixed(2)))) {
+                    if (((totalDiscounts > 0 || my.vm.totalDiscount() > 0) && (totalDiscounts + my.vm.totalDiscount()) > parseFloat(((my.userInfo.storeRules.descontomaximo * grandTotal) / 100).toFixed(2)))) {
                         if ((!my.userInfo.Adm && my.vm.adminPassword()) && (my.vm.selectedProducts().length > 0)) {
 
                             BootstrapDialog.show({

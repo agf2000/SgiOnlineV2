@@ -8,36 +8,38 @@ $(function () {
     my.today = new Date();
     my.edidting = false;
 
-    my.userInfo = Cookies.getJSON('SGIUser');
+    if (amplify.store.sessionStorage(document.location.host + "_user_loggedin") > 0) {
+        my.userInfo = JSON.parse(amplify.store.sessionStorage(document.location.host + "_user"));
 
-    my.viewModel();
+        my.viewModel();
 
-    if (my.saleId > 0) {
-        my.edidting = true;
+        if (my.saleId > 0) {
+            my.edidting = true;
 
-        getSale();
-    } else {
-        if (my.vm.storeRules().CondPagtoPadrao != '') {
-            $('#select2PayConditions').append($('<option value="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[0]) + '" fee="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[3]) + '" default="true" selected>' + my.vm.storeRules().CondPagtoPadrao.split(',')[1] + '</option>'));
-            $('#select2PayConditions').attr({
-                'fee': my.vm.storeRules().CondPagtoPadrao.split(',')[3],
-                'default': true
-            });
-            $('#select2PayConditions').trigger('change');
+            getSale();
+        } else {
+            if (my.userInfo.storeRules.condpagtopadrao != '') {
+                $('#select2PayConditions').append($('<option value="' + parseInt(my.userInfo.storeRules.condpagtopadrao.split(',')[0]) + '" fee="' + parseInt(my.userInfo.storeRules.condpagtopadrao.split(',')[3]) + '" default="true" selected>' + my.userInfo.storeRules.condpagtopadrao.split(',')[1] + '</option>'));
+                $('#select2PayConditions').attr({
+                    'fee': my.userInfo.storeRules.condpagtopadrao.split(',')[3],
+                    'default': true
+                });
+                $('#select2PayConditions').trigger('change');
+            }
+
+            if (my.userInfo.storeRules.operadorapadrao != '') {
+                $('#select2CardProviders').append($('<option value="' + parseInt(my.userInfo.storeRules.operadorapadrao.split(',')[0]) + '" selected>' + my.userInfo.storeRules.operadorapadrao.split(',')[1] + '</option>'));
+                $('#select2CardProviders').trigger('change');
+            }
+
+            $('#select2Salesmen').val(null);
+            $('#select2Salesmen').append($('<option value="' + parseInt(my.userInfo.sgiid) + '" selected>' + my.userInfo.displayname + '</option>'));
+            $('#select2Salesmen').trigger("change");
+
+            my.vm.totalPercDiscount(0.00);
+
+            $('input:radio[name=saleType]').focus();
         }
-
-        if (my.vm.storeRules().OperadoraPadrao != '') {
-            $('#select2CardProviders').append($('<option value="' + parseInt(my.vm.storeRules().OperadoraPadrao.split(',')[0]) + '" selected>' + my.vm.storeRules().OperadoraPadrao.split(',')[1] + '</option>'));
-            $('#select2CardProviders').trigger('change');
-        }
-
-        $('#select2Salesmen').val(null);
-        $('#select2Salesmen').append($('<option value="' + parseInt(my.userInfo.SGIID) + '" selected>' + my.userInfo.Employee + '</option>'));
-        $('#select2Salesmen').trigger("change");
-
-        my.vm.totalPercDiscount(0.00);
-
-        $('input:radio[name=saleType]').focus();
     }
 
     $('#select2Clients').select2({
@@ -46,15 +48,17 @@ $(function () {
         language: "pt-BR",
         // allowClear: true,
         ajax: {
-            url: "/dnn/desktopmodules/sgi/api/people/GetSGIPeople",
+            url: "/api/getPeople",
             dataType: 'json',
             delay: 250,
             data: function (params) {
                 var query = {
-                    filter: params.term,
-                    pageIndex: params.page,
-                    pageSize: 50,
-                    type: 1
+                    searchFor: params.term ? " and fantasia like '" + params.term + "%'" : '',
+                    pageIndex: params.page || 1,
+                    pageSize: 30,
+                    type: 1,
+                    orderBy: 'fantasia',
+                    orderDir: 'ASC'
                 };
 
                 return query;
@@ -67,30 +71,15 @@ $(function () {
 
                 $.each(data.data, function (i, v) {
                     var o = {};
-                    o.id = v.Codigo;
-                    o.name = v.Fantasia;
-                    //o.limite = v.Limite_Credito;
-                    //o.preferencial = v.CliPreferencial;
-                    //o.paymentTypes = v.TiposPagamentos;
-                    //o.daysBehind = v.DiasAtrasado;
-                    //o.debt = v.Debito;
-                    //o.blocked = v.Bloqueado;
-                    //o.creditBlocked = v.Bloquear_Credito;
-                    //o.personType = v.Natureza;
-                    //o.spc = v.SPC;
-                    //o.cpfCnpj = v.CPF_CNPJ;
-                    //o.clientDiscount = v.DescontoCliente;
-                    //o.paymentCondId = v.CodCondPagto;
-                    //o.resale = v.Revenda;
-                    //o.convenentDiscount = v.DescontoConvenio;
-                    o.active = v.Ativo;
+                    o.id = v.codigo;
+                    o.name = v.fantasia;
                     results.push(o);
                 });
 
                 return {
                     results: results,
                     pagination: {
-                        more: (params.page * 50) < data.total
+                        more: (params.page * 30) < data.recordsTotal
                     }
                 };
             },
@@ -99,12 +88,11 @@ $(function () {
         escapeMarkup: function (markup) {
             return markup;
         },
-        minimumInputLength: 1,
+        // minimumInputLength: -1,
+        // minimumResultsForSearch: -1,
         templateResult: function (repo) {
-            if (repo.loading) {
-                return repo.text;
-            }
-            var markup = '<option value="' + repo.id + '" active="' + repo.active + '">' + repo.name + '</option>';
+            if (repo.loading) return repo.text;
+            var markup = '<option value="' + repo.id + '">' + repo.name + '</option>'
             return markup;
         },
         templateSelection: function (repo) {
@@ -144,16 +132,19 @@ $(function () {
         placeholder: "Informe o código, nome do vendedor",
         width: '100%',
         language: "pt-BR",
+        // allowClear: true,
         ajax: {
-            url: "/dnn/desktopmodules/sgi/api/people/GetSGIPeople",
+            url: "/api/getPeople",
             dataType: 'json',
-            delay: 550,
+            delay: 250,
             data: function (params) {
                 var query = {
-                    filter: params.term,
-                    pageIndex: params.page,
-                    pageSize: 10,
-                    type: 3
+                    searchFor: params.term ? " and fantasia like '" + params.term + "%' and ind_vendedor = 1" : ' and ind_vendedor = 1',
+                    pageIndex: params.page || 1,
+                    pageSize: 30,
+                    type: 3,
+                    orderBy: 'fantasia',
+                    orderDir: 'ASC'
                 };
 
                 return query;
@@ -166,17 +157,15 @@ $(function () {
 
                 $.each(data.data, function (i, v) {
                     var o = {};
-                    o.id = v.Codigo;
-                    o.name = v.Fantasia;
-                    //o.description = v.Descricao;
-                    //o.value = v.Codigo;
+                    o.id = v.codigo;
+                    o.name = v.fantasia;
                     results.push(o);
                 });
 
                 return {
                     results: results,
                     pagination: {
-                        more: (params.page * 10) < data.total
+                        more: (params.page * 30) < data.recordsTotal
                     }
                 };
             },
@@ -185,12 +174,11 @@ $(function () {
         escapeMarkup: function (markup) {
             return markup;
         },
-        minimumInputLength: 1,
+        // minimumInputLength: -1,
+        // minimumResultsForSearch: -1,
         templateResult: function (repo) {
-            if (repo.loading) {
-                return repo.text;
-            }
-            var markup = '<option value="' + repo.id + '">' + repo.name + '</option>';
+            if (repo.loading) return repo.text;
+            var markup = '<option value="' + repo.id + '">' + repo.name + '</option>'
             return markup;
         },
         templateSelection: function (repo) {
@@ -774,7 +762,7 @@ $(function () {
                     }
 
                     // verifica se a loja usa condição de cliente preferencial and se o cliente é preferencial
-                    if (my.vm.storeRules().CliPreferencial && client.CliPreferencial) {
+                    if (my.userInfo.storeRules.clipreferencial && client.CliPreferencial) {
                         if ((parseFloat(my.vm.totalCred().toFixed(2)) + parseFloat(my.vm.totalCard().toFixed(2)) + parseFloat(my.vm.totalCash().toFixed(2))) !== (parseFloat(my.vm.totalAmount().toFixed(2)) + parseFloat(my.vm.feeValue().toFixed(2)))) {
                             var notice2 = new PNotify({
                                 title: 'Atenção!',
@@ -797,7 +785,7 @@ $(function () {
 
                             return false;
                         } else {
-                            if ((parseFloat(my.vm.totalPercDiscount()) > my.vm.storeRules().DescontoMaximo) && my.vm.validateAgain()) {
+                            if ((parseFloat(my.vm.totalPercDiscount()) > my.userInfo.storeRules.descontomaximo) && my.vm.validateAgain()) {
 
                                 BootstrapDialog.show({
                                     title: 'Desconto ultrapassa o permitido',
@@ -1130,7 +1118,7 @@ $(function () {
                         });
                         var discountValue = parseFloat(grandTotal) - (parseFloat(my.vm.totalAmount()));
                         var discountPerc = (discountValue * 100) / parseFloat(my.vm.extendedPrice());
-                        if ((discountPerc > my.vm.storeRules().DescontoMaximo) && my.vm.validateAgain()) {
+                        if ((discountPerc > my.userInfo.storeRules.descontomaximo) && my.vm.validateAgain()) {
 
                             BootstrapDialog.show({
                                 title: 'Desconto ultrapassa o permitido',
@@ -1433,7 +1421,7 @@ $(function () {
         });
     });
 
-    my.selectedSale = $("input[name=saleType]:checked").parent().find('label').text().trim();
+    my.selectedSale = $("input[name=saleType]:checked").parent()[0].innerText.trim();
 
     $('.btnReturn').click(function (e) {
         if (e.clientX === 0) {
@@ -1743,7 +1731,7 @@ function RegisterSale() {
         contentType: 'application/json; charset=utf-8',
         url: '/dnn/desktopmodules/sgi/api/sales/SaveSGISale',
         data: JSON.stringify({
-            Cod_Funcionario: my.userInfo.SGIID,
+            Cod_Funcionario: my.userInfo.sgiid,
             NumDav: my.saleId,
             CodCliente: $('#select2Clients').select2('data')[0].id,
             CodVendedor: $('#select2Salesmen').select2('data')[0].id,
@@ -1854,24 +1842,24 @@ function ClearSale() {
     $('#selectCCC').val(null);
     $("#selectCCC option").attr('disabled', false);
 
-    if (my.vm.storeRules().CondPagtoPadrao != '') {
+    if (my.userInfo.storeRules.condpagtopadrao != '') {
         $('#select2PayConditions').val(null);
-        $('#select2PayConditions').append($('<option value="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[0]) + '" fee="' + parseInt(my.vm.storeRules().CondPagtoPadrao.split(',')[3]) + '" default="true" selected>' + my.vm.storeRules().CondPagtoPadrao.split(',')[1] + '</option>'));
+        $('#select2PayConditions').append($('<option value="' + parseInt(my.userInfo.storeRules.condpagtopadrao.split(',')[0]) + '" fee="' + parseInt(my.userInfo.storeRules.condpagtopadrao.split(',')[3]) + '" default="true" selected>' + my.userInfo.storeRules.condpagtopadrao.split(',')[1] + '</option>'));
         $('#select2PayConditions').attr({
-            'fee': my.vm.storeRules().CondPagtoPadrao.split(',')[3],
+            'fee': my.userInfo.storeRules.condpagtopadrao.split(',')[3],
             'default': true
         });
         $('#select2PayConditions').trigger('change');
     }
 
-    if (my.vm.storeRules().OperadoraPadrao != '') {
+    if (my.userInfo.storeRules.operadorapadrao != '') {
         $('#select2CardProviders').val(null);
-        $('#select2CardProviders').append($('<option value="' + parseInt(my.vm.storeRules().OperadoraPadrao.split(',')[0]) + '" selected>' + my.vm.storeRules().OperadoraPadrao.split(',')[1] + '</option>'));
+        $('#select2CardProviders').append($('<option value="' + parseInt(my.userInfo.storeRules.operadorapadrao.split(',')[0]) + '" selected>' + my.userInfo.storeRules.operadorapadrao.split(',')[1] + '</option>'));
         $('#select2CardProviders').trigger('change');
     }
 
     $('#select2Salesmen').val(null);
-    $('#select2Salesmen').append($('<option value="' + parseInt(my.userInfo.SGIID) + '" selected>' + my.userInfo.Employee + '</option>'));
+    $('#select2Salesmen').append($('<option value="' + parseInt(my.userInfo.sgiid) + '" selected>' + my.userInfo.displayname + '</option>'));
     $('#select2Salesmen').trigger("change");
 
     my.vm.totalDiscount(0.00);
@@ -2169,7 +2157,7 @@ function ValidateCliente(id) {
                 return false;
             }
 
-            if (my.vm.storeRules().BloqCliAtrasado && data.DiasAtrasado) {
+            if (my.userInfo.storeRules.bloqcliatrasado && data.DiasAtrasado) {
                 if (data.CliPreferencial == false) {
 
                     BootstrapDialog.show({
@@ -2361,7 +2349,7 @@ function ValidateCliente(id) {
                 }
             }
 
-            if (my.vm.storeRules().ConsistenciaCliente) {
+            if (my.userInfo.storeRules.consistenciacliente) {
                 if ($('input[name=saleType]:eq(1)').is(':checked')) {
                     if (data.Natureza != 'J' && my.validaCPF(data.Cpf_Cnpj) != true) {
                         var notice14 = new PNotify({
@@ -2429,7 +2417,7 @@ function ValidateCliente(id) {
                 return false;
             }
 
-            if ((my.vm.storeRules().AvisaClienteDebito) && (data.Debito > 0 && data.CliPreferencial == false)) {
+            if ((my.userInfo.storerules.avisaclientedebito) && (data.Debito > 0 && data.CliPreferencial == false)) {
                 var notice16 = new PNotify({
                     title: 'Atenção!',
                     text: 'O cliente <strong>' + name + ' (' + id + ')</strong> possui um débito de <strong> R$ ' + data.Debito.toLocaleString(undefined, {
@@ -2841,7 +2829,7 @@ function ValidateProduct(id) {
             });
         }
 
-        if (my.vm.storeRules().EstoqueNegativo == false && (data.Estoque - data.EstoqueReservado) < parseFloat($('#productQty').val()) && my.vm.adminPassword()) {
+        if (my.userInfo.storeRules.estoquenegativo == false && (data.Estoque - data.EstoqueReservado) < parseFloat($('#productQty').val()) && my.vm.adminPassword()) {
             BootstrapDialog.show({
                 title: 'Estoque insuficiente',
                 message: $('<div></div>').load('/templates/validationForm.html'),

@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
         ],
         script: [
             // '/vendors/bootstrap-select/dist/js/bootstrap-select.js',
-            // '/vendors/bootstrap-select/dist/js/i18n/defaults-pt_BR.min.js',
+            '/vendors/amplify/amplify.min.js',
             '/vendors/bootstrap-switch/bootstrap-switch.min.js',
             '/js/app/utilities.js',
             '/js/pages/sales.js'
@@ -39,6 +39,7 @@ router.get('/novo', function (req, res, next) {
             '/vendors/bootstrap-daterangepicker/daterangepicker.css',
             '/vendors/bootstrap-dialog/css/bootstrap-dialog.min.css',
             '/vendors/bootstrap-validator/dist/css/bootstrapValidator.min.css',
+            '/vendors/sweetAlert2/css/sweetalert2.min.css',
             '/css/pages/sales.css'
         ],
         script: [
@@ -53,6 +54,7 @@ router.get('/novo', function (req, res, next) {
             '/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js',
             '/vendors/bootstrap-validator/dist/js/bootstrapValidator.min.js',
             '/vendors/bootstrap-validator/dist/js/language/pt_BR.js',
+            '/vendors/sweetAlert2/js/sweetalert2.min.js',
             '/js/app/utilities.js',
             '/js/pages/saleViewModel.js',
             '/js/pages/sale.js'
@@ -106,6 +108,7 @@ router.get('/:saleId/:sgiId', function (req, res, next) {
                             '/vendors/bootstrap-daterangepicker/daterangepicker.css',
                             '/vendors/bootstrap-dialog/css/bootstrap-dialog.min.css',
                             '/vendors/bootstrap-validator/dist/css/bootstrapValidator.min.css',
+                            '/vendors/sweetAlert2/css/sweetalert2.min.css',
                             '/css/pages/sales.css'
                         ],
                         script: [
@@ -120,6 +123,7 @@ router.get('/:saleId/:sgiId', function (req, res, next) {
                             '/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js',
                             '/vendors/bootstrap-validator/dist/js/bootstrapValidator.min.js',
                             '/vendors/bootstrap-validator/dist/js/language/pt_BR.js',
+                            '/vendors/sweetAlert2/js/sweetalert2.min.js',
                             '/js/app/utilities.js',
                             '/js/pages/saleViewModel.js',
                             '/js/pages/sale.js'

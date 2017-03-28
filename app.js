@@ -47,10 +47,10 @@ app.use(authRouter);
 
 app.use(function (req, res, next) {
 	if (req.isAuthenticated()) {
-		res.locals.user = req.user;
-		res.cookie('SGIUser', JSON.stringify(req.user).replace(/"([\w]+)":/g, function ($0, $1) {
-			return ('"' + $1.toLowerCase() + '":');
-		}));
+		// res.locals.user = req.user;
+		// res.cookie('SGIUser', JSON.stringify(req.user).replace(/"([\w]+)":/g, function ($0, $1) {
+		// 	return ('"' + $1.toLowerCase() + '":');
+		// }));
 		next();
 		return;
 	}

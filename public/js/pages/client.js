@@ -8,7 +8,11 @@ $(function () {
 
     my.clientId = document.location.pathname.split('/')[2]; // my.getQuerystring('codigo', my.getStringParameterByName('codigo'));
 
-    my.userInfo = Cookies.getJSON('SGIUser');
+    if (amplify.store.sessionStorage(document.location.host + "_user_loggedin")) {
+        my.userInfo = JSON.parse(amplify.store.sessionStorage(document.location.host + "_user"));
+    } else {
+        window.location.href = '/login?next=' + window.location.pathname;
+    }
 
     // my.orderBy = my.getQuerystring('orderby', my.getStringParameterByName('orderby'));
     // my.orderDir = my.getQuerystring('orderdir', my.getStringParameterByName('orderdir'));
@@ -418,11 +422,14 @@ $(function () {
                         telefone: {
                             type: 'string'
                         },
+                        // tipo: {
+                        //     defaultValue: {
+                        //         Nome: "PRINCIPAL",
+                        //         Tipo: "1"
+                        //     }
+                        // },
                         tipo: {
-                            defaultValue: {
-                                Nome: "PRINCIPAL",
-                                Tipo: "1"
-                            }
+                            type: 'number'
                         },
                         padrao: {
                             type: 'boolean',
@@ -1000,6 +1007,7 @@ function phoneTypeDropDownEditor(container, options) {
         .kendoDropDownList({
             dataTextField: "nome",
             dataValueField: "tipo",
+            optionLabel: 'Selecionar',
             dataSource: phoneTypes
         });
 }

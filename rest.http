@@ -1,2 +1,10 @@
 
 GET http://dev.me:3000/davs/print/71118/14887
+
+###
+
+GET http://dev.me:3000/api/getStoreSettings
+
+###
+
+GET http://dev.me:3000/api/getPeople?type=1&orderBy=nome&orderDir=ASC&pageIndex=1&pageSize=10&searchFor=and nome like 'a%'

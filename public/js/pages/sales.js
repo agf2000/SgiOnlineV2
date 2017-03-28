@@ -13,8 +13,6 @@ $(function () {
     // var register = my.getQuerystring('novo', my.getStringParameterByName('cadastro'));
     // my.saleId = my.getQuerystring('numDav', my.getStringParameterByName('numDav'));
 
-    my.userInfo = Cookies.getJSON('SGIUser');
-
     $('.condition input').bootstrapSwitch();
 
     $('#tbSearchFor').keyup(function (e) {
@@ -229,7 +227,7 @@ $(function () {
     });
 
     var salesGrid = $('#salesGrid').kendoGrid({
-        // autoBind: false,
+        autoBind: false,
         dataSource: salesDataSource,
         //height: 380,
         toolbar: kendo.template($("#tollbarTmpl").html()),
@@ -284,7 +282,7 @@ $(function () {
             {
                 field: "codcliente",
                 title: "Cliente (Código)",
-                width: 220,
+                width: 110,
                 hidden: true,
                 attributes: {
                     'tag': "1"
@@ -300,7 +298,7 @@ $(function () {
             },
             {
                 field: "valortotal",
-                title: "Valor Total",
+                title: "Valor",
                 width: 65,
                 template: '#= "R$ " + valortotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) #',
                 attributes: {
@@ -915,6 +913,21 @@ $(function () {
         $('#divSales').show();
         $('#divSaleForm').fadeOut();
     });
+
+    if (amplify.store.sessionStorage(document.location.host + "_user_loggedin") > 0) {
+        my.userInfo = JSON.parse(amplify.store.sessionStorage(document.location.host + "_user"));
+
+        // $('#salesGrid').data('kendoGrid').dataSource.read();
+        salesGrid.dataSource.read();
+        // } else {
+        //     $.getJSON('/api/getUserInfo', function (data) {
+        //         amplify.store.sessionStorage(document.location.host + "_user", JSON.stringify(data));
+        //         amplify.store.sessionStorage(document.location.host + "_user_loggedin", 1);
+        //         my.userInfo = data;
+
+        //         salesGrid.dataSource.read();
+        //     });
+    }
 
     moment.locale("pt-br");
 });

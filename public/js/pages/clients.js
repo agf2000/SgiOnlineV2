@@ -11,7 +11,11 @@ $(function () {
     // my.orderBy = my.getQuerystring('orderby', my.getStringParameterByName('orderby'));
     // my.orderDir = my.getQuerystring('orderdir', my.getStringParameterByName('orderdir'));
 
-    my.userInfo = Cookies.getJSON('SGIUser');
+    if (amplify.store.sessionStorage(document.location.host + "_user_loggedin")) {
+        my.userInfo = JSON.parse(amplify.store.sessionStorage(document.location.host + "_user"));
+    } else {
+        window.location.href = '/login?next=' + window.location.pathname;
+    }
 
     $('#kddlConditions').kendoDropDownList();
 
@@ -114,7 +118,7 @@ $(function () {
                 });
             }
 
-            if (my.admin || (dataItem.Cod_Funcionario == 0 || dataItem.Cod_Funcionario == my.userInfo.sgiid)) {
+            if (my.admin || (dataItem.cod_funcionario == 0 || dataItem.cod_funcionario == my.userInfo.sgiid)) {
                 $('#btnDeleteSelected').attr({
                     'disabled': false
                 });
@@ -210,7 +214,7 @@ $(function () {
                 var id = row.data("uid");
                 my.uId = id;
 
-                if (my.admin || (selectedItem.Cod_Funcionario == 0 || selectedItem.Cod_Funcionario == my.userInfo.sgiid)) {
+                if (my.admin || (selectedItem.cod_funcionario == 0 || selectedItem.cod_funcionario == my.userInfo.sgiid)) {
                     $('#btnEditSelected').attr({
                         'disabled': false
                     });
@@ -224,7 +228,7 @@ $(function () {
                 var rowSelector = ">tr:nth-child(" + (i + 1) + ")";
                 var row = grid.tbody.find(rowSelector);
 
-                if (item.Cod_Funcionario > 0 && item.Cod_Funcionario != my.userInfo.sgiid) {
+                if (item.cod_funcionario > 0 && item.cod_funcionario != my.userInfo.sgiid) {
                     row.css({ 'display': 'none' });
                 }
             });*/
@@ -373,7 +377,7 @@ $(function () {
         var grid = $('#clientsGrid').data("kendoGrid");
         var dataItem = grid.dataSource.getByUid(my.uId);
 
-        if (my.userInfo.adm || dataItem.Cod_Funcionario == my.userInfo.userid) {
+        if (my.userInfo.adm || dataItem.cod_funcionario == my.userInfo.userid) {
             swal({
                 title: 'Tem certeza?',
                 text: "Esta ação não poderá ser revertida!",
